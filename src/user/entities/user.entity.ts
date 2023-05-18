@@ -25,7 +25,7 @@ export class User extends BaseEntity {
   email: string;
 
   @Exclude()
-  @ApiProperty({ example: '123456' })
+  @ApiProperty({ example: 'JaneDoe123*' })
   @Column({ nullable: false, type: 'text' })
   password: string;
 
@@ -35,7 +35,8 @@ export class User extends BaseEntity {
   roles: Role[];
 
   constructor(partial: Partial<IUser>) {
-    super(partial);
+    super();
+    Object.assign(this, partial);
   }
 
   hasRole(role: Role) {

@@ -43,7 +43,7 @@ export class CreateUserDto implements Partial<IUser> {
   })
   email: string;
 
-  @ApiProperty({ example: '123456' })
+  @ApiProperty({ example: 'JaneDoe123*' })
   @IsNotEmpty({ message: 'It is required to send the user password' })
   @Matches(
     /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,}/,

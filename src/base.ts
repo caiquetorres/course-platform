@@ -1,4 +1,8 @@
-import { INestApplication, ValidationPipe } from '@nestjs/common';
+import {
+  ClassSerializerInterceptor,
+  INestApplication,
+  ValidationPipe,
+} from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
@@ -19,6 +23,7 @@ export async function setupApp(app: INestApplication) {
   setupPipes(app);
   setupGuards(app, reflector);
   setupSwagger(app, envService);
+  setupInterceptors(app, reflector);
 
   app.enableCors();
 }
@@ -32,6 +37,17 @@ export async function setupApp(app: INestApplication) {
  */
 function setupGuards(app: INestApplication, reflector: Reflector) {
   app.useGlobalGuards(new JwtGuard(reflector), new RolesGuard(reflector));
+}
+
+/**
+ * Function that setup all the global application interceptors.
+ *
+ * @param app defines an object that represents the application instance.
+ * @param reflector defines an object that represents the application
+ * reflector.
+ */
+function setupInterceptors(app: INestApplication, reflector: Reflector) {
+  app.useGlobalInterceptors(new ClassSerializerInterceptor(reflector));
 }
 
 /**

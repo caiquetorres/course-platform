@@ -41,10 +41,6 @@ export abstract class BaseEntity implements IBaseEntity {
   @DeleteDateColumn()
   deletedAt: Date;
 
-  constructor(partial: Partial<IBaseEntity>) {
-    Object.assign(this, partial);
-  }
-
   /**
    * Method that validates if the given id parameter is equal to the
    * entity `id` property.

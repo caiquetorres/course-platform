@@ -7,6 +7,7 @@ import {
   ApiTags,
 } from '@nestjs/swagger';
 
+import { Public } from '../../common/decorators/auth/public.decorator';
 import { RequestUser } from '../../common/decorators/request-user/request-user.decorator';
 
 import { User } from '../entities/user.entity';
@@ -45,6 +46,7 @@ export class UserController {
       },
     },
   })
+  @Public()
   @Post()
   createOne(@Body() dto: CreateUserDto, @RequestUser() requestUser: User) {
     return this._userService.createOne(requestUser, dto);
