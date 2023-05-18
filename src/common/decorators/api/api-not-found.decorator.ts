@@ -1,11 +1,9 @@
 import { Type } from '@nestjs/common';
 import { ApiNotFoundResponse } from '@nestjs/swagger';
 
-import { IBase } from '../../interfaces/base.interface';
+import { IBaseEntity } from '../../interfaces/base-entity.interface';
 
-import '../../extensions/string.extension';
-
-export function ApiNotFound<T extends IBase>(entity: string | Type<T>) {
+export function ApiNotFound<T extends IBaseEntity>(entity: string | Type<T>) {
   let entityName: string;
 
   if (typeof entity === 'string') {

@@ -41,7 +41,8 @@
     "pg": "^8.11.0",
     "reflect-metadata": "^0.1.13",
     "rxjs": "^7.2.0",
-    "typeorm": "^0.3.16"
+    "typeorm": "^0.3.16",
+    "typeorm-cursor-pagination": "^0.10.1"
   },
   "devDependencies": {
     "@automock/jest": "^1.0.1",
