@@ -131,9 +131,7 @@ export class UserService implements IUserService {
       let user = await this._userRepository.findOne({ where: { id } });
 
       if (!user) {
-        throw new NotFoundException(
-          `The user identified by '${id}' does not exist or is disabled`,
-        );
+        throw new NotFoundException(`User with id '${id}' not found`);
       }
 
       user = new UserFactory().from(user).withName(dto.name).build();
@@ -162,9 +160,7 @@ export class UserService implements IUserService {
       const user = await this._userRepository.findOneBy({ id });
 
       if (!user) {
-        throw new NotFoundException(
-          `The user identified by '${id}' does not exist or is disabled`,
-        );
+        throw new NotFoundException(`User with id '${id}' not found`);
       }
 
       return this._userRepository.remove(user);

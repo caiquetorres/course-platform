@@ -1,7 +1,15 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, Index } from 'typeorm';
+import {
+  Column,
+  Entity,
+  Index,
+  JoinTable,
+  ManyToMany,
+  Relation,
+} from 'typeorm';
 
 import { BaseEntity } from '../../common/entities/base.entity';
+import { Course } from '../../course/entities/course.entity';
 
 import { Role } from '../enums/role.enum';
 
@@ -9,7 +17,7 @@ import { IUser } from '../interfaces/user.interface';
 import { Exclude, Expose } from 'class-transformer';
 
 @Entity('users')
-export class User extends BaseEntity {
+export class User extends BaseEntity implements IUser {
   @ApiProperty({ example: 'Jane Doe' })
   @Column({ nullable: false, length: 64 })
   name: string;
@@ -33,6 +41,10 @@ export class User extends BaseEntity {
   @Expose({ name: 'permissions' })
   @Column({ nullable: false, type: 'simple-array' })
   roles: Role[];
+
+  @JoinTable({ name: 'user_course' })
+  @ManyToMany(() => Course, (course) => course.users)
+  courses: Relation<Course>[];
 
   constructor(partial: Partial<IUser>) {
     super();

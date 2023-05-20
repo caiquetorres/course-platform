@@ -8,8 +8,6 @@ import { AuthGuard } from '@nestjs/passport';
 
 import { User } from '../../../user/entities/user.entity';
 
-import { Role } from '../../../user/enums/role.enum';
-
 import { UserFactory } from '../../../user/factories/user.factory';
 import { IS_PUBLIC } from '../../constants/public.constant';
 

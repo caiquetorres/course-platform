@@ -4,8 +4,8 @@ import {
   Delete,
   Get,
   Param,
-  Patch,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import {
@@ -23,7 +23,7 @@ import { ApiUnauthorized } from '../../common/decorators/api/api-unauthorized.de
 import { AllowFor } from '../../common/decorators/auth/allow-for.decorator';
 import { Public } from '../../common/decorators/auth/public.decorator';
 import { RequestUser } from '../../common/decorators/request-user/request-user.decorator';
-import { InjectUserService } from '../decorators/inject-user-service.decorator';
+import { InjectUserService } from '../decorators/inject-service.decorator';
 
 import { ParseUUIDPipe } from '../../common/pipes/parse-uuid/parse-uuid.pipe';
 
@@ -118,7 +118,7 @@ export class UserController {
   @ApiOperation({ summary: 'Retrieves a user given it id' })
   @ApiOkResponse({
     type: User,
-    description: 'The entity was found',
+    description: 'The user was found',
   })
   @ApiBadRequestResponse({
     description: 'The given id is not a uuid',
@@ -154,7 +154,7 @@ export class UserController {
   @ApiOperation({ summary: 'Retrieves several users' })
   @ApiOkResponse({
     type: UserPageDto,
-    description: 'The list of entities',
+    description: 'The list of users',
   })
   @ApiUnauthorized()
   @ApiForbidden()
@@ -197,7 +197,7 @@ export class UserController {
   @ApiForbidden()
   @ApiNotFound(User)
   @AllowFor(Role.user)
-  @Patch(':id')
+  @Put(':id')
   updateOne(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateUserDto,

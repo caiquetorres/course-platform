@@ -11,6 +11,7 @@ import { AuthModule } from './auth/auth.module';
 import { ThrottlerConfig } from './common/config/throttler/throttler.config';
 import { TypeOrmConfig } from './common/config/typeorm/typeorm.config';
 import { PathLoggerMiddleware } from './common/middlewares/path-logger.middleware';
+import { CourseModule } from './course/course.module';
 import { EnvModule } from './env/env.module';
 import { UserModule } from './user/user.module';
 
@@ -18,6 +19,7 @@ import { UserModule } from './user/user.module';
   imports: [
     AuthModule,
     UserModule,
+    CourseModule,
     EnvModule.forRoot({ envFilePath: ['.env'] }),
     ThrottlerModule.forRootAsync({ useClass: ThrottlerConfig }),
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfig }),
