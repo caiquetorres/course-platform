@@ -60,6 +60,7 @@ export class UserService implements IUserService {
       .asUser()
       .build();
 
+    delete user.id;
     return this._userRepository.save(user);
   }
 
@@ -135,10 +136,7 @@ export class UserService implements IUserService {
         );
       }
 
-      user = new UserFactory()
-        .from({ ...user })
-        .withName(dto.name)
-        .build();
+      user = new UserFactory().from(user).withName(dto.name).build();
 
       return this._userRepository.save(user);
     };

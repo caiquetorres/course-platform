@@ -2,11 +2,12 @@ import { User } from '../entities/user.entity';
 
 import { Role } from '../enums/role.enum';
 
-import { IUser } from '../interfaces/user.interface';
 import { Email } from '../value-objects/email';
 import { Password } from '../value-objects/password';
 
 export class UserFactory {
+  private _id: string | null = null;
+
   private _name: string | null = null;
 
   private _username: string | null = null;
@@ -17,12 +18,22 @@ export class UserFactory {
 
   private _roles = new Set<Role>();
 
-  from(user: Partial<IUser>) {
-    return this.withName(user.name)
-      .withUsername(user.username)
-      .withEmail(new Email(user.email))
-      .withPassword(new Password(user.password))
-      .withRoles(user.roles);
+  from(user: User) {
+    user ??= {} as any;
+
+    this._id = user.id ?? null;
+    this._name = user.name ?? null;
+    this._email = user.email ?? null;
+    this._username = user.username ?? null;
+    this._password = user.password ?? null;
+    this._roles = new Set(user.roles ?? []);
+
+    return this;
+  }
+
+  withId(id: string) {
+    this._id = id;
+    return this;
   }
 
   withName(name: string) {
@@ -69,6 +80,7 @@ export class UserFactory {
 
   build() {
     return new User({
+      id: this._id,
       name: this._name,
       email: this._email,
       username: this._username,
