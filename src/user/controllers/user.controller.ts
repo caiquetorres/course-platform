@@ -23,6 +23,7 @@ import { ApiUnauthorized } from '../../common/decorators/api/api-unauthorized.de
 import { AllowFor } from '../../common/decorators/auth/allow-for.decorator';
 import { Public } from '../../common/decorators/auth/public.decorator';
 import { RequestUser } from '../../common/decorators/request-user/request-user.decorator';
+import { InjectUserService } from '../decorators/inject-user-service.decorator';
 
 import { ParseUUIDPipe } from '../../common/pipes/parse-uuid/parse-uuid.pipe';
 
@@ -33,7 +34,7 @@ import { UpdateUserDto } from '../dtos/update-user.dto';
 import { UserPageDto } from '../dtos/user-page.dto';
 import { Role } from '../enums/role.enum';
 
-import { UserService } from '../services/user.service';
+import { IUserService } from '../interfaces/user.service.interface';
 
 import { PageQuery } from '../../common/classes/page.query';
 
@@ -43,7 +44,10 @@ import { PageQuery } from '../../common/classes/page.query';
 @ApiTags('users')
 @Controller('users')
 export class UserController {
-  constructor(private readonly _userService: UserService) {}
+  constructor(
+    @InjectUserService()
+    private readonly _userService: IUserService,
+  ) {}
 
   /**
    * Creates a new user with the given data.
@@ -81,7 +85,7 @@ export class UserController {
   })
   @Public()
   @Post()
-  createOne(@Body() dto: CreateUserDto, @RequestUser() requestUser: User) {
+  createOne(@RequestUser() requestUser: User, @Body() dto: CreateUserDto) {
     return this._userService.createOne(requestUser, dto);
   }
 
@@ -132,8 +136,8 @@ export class UserController {
   @AllowFor(Role.user)
   @Get(':id')
   findOne(
-    @Param('id', ParseUUIDPipe) id: string,
     @RequestUser() requestUser: User,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     return this._userService.findOne(requestUser, id);
   }
@@ -156,8 +160,8 @@ export class UserController {
   @ApiForbidden()
   @AllowFor(Role.admin)
   @Get()
-  findMany(@Query() query: PageQuery, @RequestUser() requestUser: User) {
-    return this._userService.findMany(query, requestUser);
+  findMany(@RequestUser() requestUser: User, @Query() query: PageQuery) {
+    return this._userService.findMany(requestUser, query);
   }
 
   /**

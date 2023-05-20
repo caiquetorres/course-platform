@@ -8,6 +8,7 @@ import { Public } from './common/decorators/auth/public.decorator';
 export class AppController {
   /**
    * Method that returns a simple 'pong'.
+   *
    * @returns 'pong'
    */
   @ApiOperation({ summary: 'Test the api connection' })
@@ -19,7 +20,7 @@ export class AppController {
   @SkipThrottle()
   @Public()
   @Get('ping')
-  ping(): string {
+  ping() {
     return 'pong';
   }
 }

@@ -14,28 +14,26 @@ import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 import { Role } from '../enums/role.enum';
 
+import { IUserService } from '../interfaces/user.service.interface';
+
 import { PageQuery } from '../../common/classes/page.query';
 import { IPage } from '../../common/interfaces/page.interface';
-import bcryptjs from 'bcryptjs';
+import { UserFactory } from '../factories/user.factory';
+import { Email } from '../value-objects/email';
+import { Password } from '../value-objects/password';
 
 /**
  * A service that provides CRUD operations for users.
  */
 @Injectable()
-export class UserService {
+export class UserService implements IUserService {
   constructor(
     @InjectRepository(User)
     private readonly _userRepository: Repository<User>,
   ) {}
 
   /**
-   * Creates a new user with the given data.
-   *
-   * @param _requestUser The user who is creating the user.
-   * @param dto The data for the new user.
-   * @returns A Promise that resolves to the created user.
-   * @throws {ConflictException} If a user with the given email or username
-   * already exists.
+   * @inheritdoc
    */
   async createOne(_requestUser: User, dto: CreateUserDto) {
     const hasWithEmail = await this._hasWithEmail(dto.email);
@@ -52,21 +50,21 @@ export class UserService {
       );
     }
 
-    const user = new User({
-      ...dto,
-      roles: [Role.user],
-      password: await this._encryptPassword(dto.password),
-    });
+    const { name, username, email, password } = dto;
+
+    const user = new UserFactory()
+      .withName(name)
+      .withUsername(username)
+      .withEmail(new Email(email))
+      .withPassword(new Password(password))
+      .asUser()
+      .build();
 
     return this._userRepository.save(user);
   }
 
   /**
-   * Finds a user with the given id.
-   *
-   * @param id The id of the user to find.
-   * @returns A Promise that resolves to the found user.
-   * @throws {NotFoundException} If no user with the given id is found.
+   * @inheritdoc
    */
   async findOne(requestUser: User, id: string) {
     const find = async () => {
@@ -93,15 +91,9 @@ export class UserService {
   }
 
   /**
-   * Finds multiple users based on the provided query parameters.
-   *
-   * @param query The query object specifying pagination parameters and
-   * filters.
-   * @param requestUser The user making the request.
-   * @returns A Promise that resolves to a paginated list of users.
-   * @throws {ForbiddenException} If the user does not have permission to access the resource.
+   * @inheritdoc
    */
-  findMany(query: PageQuery, requestUser: User): Promise<IPage<User>> {
+  findMany(requestUser: User, query: PageQuery): Promise<IPage<User>> {
     const find = () => {
       const paginator = buildPaginator({
         entity: User,
@@ -131,20 +123,11 @@ export class UserService {
   }
 
   /**
-   * Updates a user with the given ID.
-   *
-   * @param requestUser The user making the request.
-   * @param id The ID of the user to update.
-   * @param dto The data to update the user with.
-   * @returns A Promise that resolves to the updated user.
-   * @throws {NotFoundException} If the user with the given ID does not
-   * exist or is disabled.
-   * @throws {ForbiddenException} If the user does not have permission to
-   * update the resource.
+   * @inheritdoc
    */
   async updateOne(requestUser: User, id: string, dto: UpdateUserDto) {
     const update = async () => {
-      const user = await this._userRepository.findOne({ where: { id } });
+      let user = await this._userRepository.findOne({ where: { id } });
 
       if (!user) {
         throw new NotFoundException(
@@ -152,7 +135,12 @@ export class UserService {
         );
       }
 
-      return this._userRepository.save(new User({ ...user, ...dto }));
+      user = new UserFactory()
+        .from({ ...user })
+        .withName(dto.name)
+        .build();
+
+      return this._userRepository.save(user);
     };
 
     if (requestUser.hasRole(Role.admin)) {
@@ -169,16 +157,7 @@ export class UserService {
   }
 
   /**
-   * Removes a user with the given ID.
-   *
-   * @param requestUser The user making the request.
-   * @param id The ID of the user to remove.
-   * @returns A Promise that resolves when the user is successfully
-   * removed.
-   * @throws {NotFoundException} If the user with the given ID does not
-   * exist or is disabled.
-   * @throws {ForbiddenException} If the user does not have permission to
-   * remove the resource.
+   * @inheritdoc
    */
   async deleteOne(requestUser: User, id: string) {
     const remove = async () => {
@@ -232,16 +211,5 @@ export class UserService {
     return this._userRepository
       .findOne({ where: { username } })
       .then((user) => !!user);
-  }
-
-  /**
-   * Method that encrypts the password.
-   *
-   * @param password defines the password that will be encrypted.
-   * @returns the encrypted password.
-   */
-  private async _encryptPassword(password: string): Promise<string> {
-    const salt = await bcryptjs.genSalt();
-    return bcryptjs.hash(password, salt);
   }
 }

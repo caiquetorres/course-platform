@@ -10,6 +10,7 @@ import { User } from '../../../user/entities/user.entity';
 
 import { Role } from '../../../user/enums/role.enum';
 
+import { UserFactory } from '../../../user/factories/user.factory';
 import { IS_PUBLIC } from '../../constants/public.constant';
 
 /**
@@ -46,7 +47,7 @@ export class JwtGuard extends AuthGuard('jwt') {
     const token = this._getAuthorizationToken(context);
 
     if (isPublic && !token) {
-      return new User({ roles: [Role.guest] });
+      return new UserFactory().asGuest().build();
     }
 
     throw new UnauthorizedException('Invalid or missing authentication token');

@@ -1,5 +1,6 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+import { PASSWORD_REGEX } from '../../common/constants/password-regex.constant';
 import { IUser } from '../interfaces/user.interface';
 import {
   IsEmail,
@@ -45,12 +46,9 @@ export class CreateUserDto implements Partial<IUser> {
 
   @ApiProperty({ example: 'JaneDoe123*' })
   @IsNotEmpty({ message: 'It is required to send the user password' })
-  @Matches(
-    /(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[#@$!%*?&])[A-Za-z\d#@$!%*?&]{8,}/,
-    {
-      message:
-        'It is required to send a password with at least 8 character, one uppercase letter, one number and one special character (#, @, $, !, %, *, ?, &)',
-    },
-  )
+  @Matches(PASSWORD_REGEX, {
+    message:
+      'It is required to send a password with at least 8 character, one uppercase letter, one number and one special character (#, @, $, !, %, *, ?, &)',
+  })
   password: string;
 }
