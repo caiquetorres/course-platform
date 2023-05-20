@@ -3,12 +3,13 @@ import { Test } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
+import { Course } from '../../course/entities/course.entity';
 import { User } from '../entities/user.entity';
 
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 
-import { USER_SERVICE } from '../constants/user-service.constant';
+import { USER_SERVICE } from '../constants/service.constant';
 import { UserService } from './user.service';
 
 import { UserFactory } from '../factories/user.factory';
@@ -29,7 +30,7 @@ describe('UserService (int)', () => {
           database: ':memory:',
           dropSchema: true,
           synchronize: true,
-          entities: [User],
+          entities: [User, Course],
         }),
       ],
     }).compile();
