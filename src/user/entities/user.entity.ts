@@ -3,6 +3,7 @@ import { Column, Entity, Index, OneToMany, Relation } from 'typeorm';
 
 import { BaseEntity } from '../../common/entities/base.entity';
 import { Enrollment } from '../../course/entities/enrollment.entity';
+import { Application } from '../../project/entities/application.entity';
 import { Project } from '../../project/entities/project.entity';
 
 import { Role } from '../enums/role.enum';
@@ -44,6 +45,10 @@ export class User extends BaseEntity implements IUser {
 
   @OneToMany(() => Project, (project) => project.owner)
   projects: Relation<Project>[];
+
+  @Exclude()
+  @OneToMany(() => Application, (application) => application.user)
+  applications: Relation<Application>[];
 
   constructor(partial: Partial<IUser>) {
     super();

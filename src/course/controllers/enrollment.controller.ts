@@ -27,7 +27,7 @@ export class EnrollmentController {
   @ApiForbidden()
   @ApiNotFound(Course)
   @AllowFor(Role.user)
-  @Put()
+  @Put('enroll')
   enroll(requestUser: User, courseId: string) {
     return this._enrollmentService.enroll(requestUser, courseId);
   }
@@ -36,7 +36,7 @@ export class EnrollmentController {
   @ApiForbidden()
   @ApiNotFound(Course)
   @AllowFor(Role.user)
-  @Delete()
+  @Delete('withdraw')
   withdraw(requestUser: User, courseId: string) {
     return this._enrollmentService.withdraw(requestUser, courseId);
   }

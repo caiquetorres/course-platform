@@ -1,8 +1,9 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, ManyToOne, Relation } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, Relation } from 'typeorm';
 
 import { BaseEntity } from '../../common/entities/base.entity';
 import { User } from '../../user/entities/user.entity';
+import { Application } from './application.entity';
 
 import { IProject } from '../interfaces/project.interface';
 import { Exclude } from 'class-transformer';
@@ -16,6 +17,10 @@ export class Project extends BaseEntity implements IProject {
   @Exclude()
   @ManyToOne(() => User, (user) => user.projects)
   owner: Relation<User>;
+
+  @Exclude()
+  @OneToMany(() => Application, (application) => application.project)
+  applications: Relation<Application>[];
 
   constructor(partial: Partial<IProject>) {
     super();
