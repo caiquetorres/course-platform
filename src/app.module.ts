@@ -14,12 +14,14 @@ import { PathLoggerMiddleware } from './common/middlewares/path-logger.middlewar
 import { CourseModule } from './course/course.module';
 import { EnvModule } from './env/env.module';
 import { ProjectModule } from './project/project.module';
+import { TopicModule } from './topic/topic.module';
 import { UserModule } from './user/user.module';
 
 @Module({
   imports: [
     AuthModule,
     UserModule,
+    TopicModule,
     CourseModule,
     ProjectModule,
     EnvModule.forRoot({ envFilePath: ['.env'] }),

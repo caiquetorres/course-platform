@@ -68,8 +68,8 @@ export class ProjectController {
 
   @ApiOperation({ summary: 'Retrieves a project given it id' })
   @ApiOkResponse({
-    type: User,
-    description: 'The pr oject was found',
+    type: Project,
+    description: 'The project was found',
   })
   @ApiBadRequestResponse({
     description: 'The given id is not a uuid',
