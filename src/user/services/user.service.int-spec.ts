@@ -3,25 +3,28 @@ import { Test } from '@nestjs/testing';
 import { TypeOrmModule, getRepositoryToken } from '@nestjs/typeorm';
 import { Repository } from 'typeorm';
 
-import { Course } from '../../course/entities/course.entity';
 import { User } from '../entities/user.entity';
 
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 
-import { USER_SERVICE } from '../constants/user.constant';
 import { UserService } from './user.service';
 
+import { USER_SERVICE } from '../constants/user.constant';
 import { UserFactory } from '../factories/user.factory';
 import { UserModule } from '../user.module';
 import { Email } from '../value-objects/email';
 import { Password } from '../value-objects/password';
+import path from 'path';
+import { v4 } from 'uuid';
 
 describe('UserService (int)', () => {
   let userService: UserService;
   let userRepository: Repository<User>;
 
   beforeEach(async () => {
+    const entities = path.resolve(__dirname, '../../**/entities/*.ts');
+
     const moduleRef = await Test.createTestingModule({
       imports: [
         UserModule,
@@ -30,7 +33,7 @@ describe('UserService (int)', () => {
           database: ':memory:',
           dropSchema: true,
           synchronize: true,
-          entities: [User, Course],
+          entities: [entities],
         }),
       ],
     }).compile();
@@ -106,7 +109,7 @@ describe('UserService (int)', () => {
     it('should throw a Not Found Exception if the user does not exist', async () => {
       const requestUser = new UserFactory().asAdmin().build();
 
-      expect(() => userService.findOne(requestUser, '123')).rejects.toThrow(
+      expect(() => userService.findOne(requestUser, v4())).rejects.toThrow(
         NotFoundException,
       );
     });
@@ -148,7 +151,7 @@ describe('UserService (int)', () => {
       const requestUser = new UserFactory().asAdmin().build();
 
       expect(() =>
-        userService.updateOne(requestUser, '123', dto),
+        userService.updateOne(requestUser, v4(), dto),
       ).rejects.toThrow(NotFoundException);
     });
   });
@@ -183,7 +186,7 @@ describe('UserService (int)', () => {
     it('should throw a Not Found Exception if the user does not exist', async () => {
       const requestUser = new UserFactory().asAdmin().build();
 
-      expect(() => userService.deleteOne(requestUser, '123')).rejects.toThrow(
+      expect(() => userService.deleteOne(requestUser, v4())).rejects.toThrow(
         NotFoundException,
       );
     });

@@ -16,6 +16,7 @@ import { UserService } from './user.service';
 
 import { UserFactory } from '../factories/user.factory';
 import { TestBed } from '@automock/jest';
+import { v4 } from 'uuid';
 
 describe('UserService (unit)', () => {
   let userService: UserService;
@@ -109,7 +110,7 @@ describe('UserService (unit)', () => {
 
   describe('Find one user', () => {
     it('should return a user given his id', async () => {
-      const id = '123';
+      const id = v4();
       const requestUser = new UserFactory().withId(id).asUser().build();
 
       jest
@@ -121,7 +122,7 @@ describe('UserService (unit)', () => {
     });
 
     it('should return a user given his id (admin)', async () => {
-      const id = '123';
+      const id = v4();
       const requestUser = new UserFactory().asAdmin().build();
 
       jest
@@ -133,7 +134,7 @@ describe('UserService (unit)', () => {
     });
 
     it('should throw a Not Found Exception if the user does not exist', () => {
-      const id = '123';
+      const id = v4();
       const requestUser = new UserFactory().asAdmin().build();
 
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
@@ -144,8 +145,8 @@ describe('UserService (unit)', () => {
     });
 
     it('should throw a Forbidden Exception if the request user is not and admin and not the user himself', () => {
-      const id = '123';
-      const requestUser = new UserFactory().withId('321').asUser().build();
+      const id = v4();
+      const requestUser = new UserFactory().withId(v4()).asUser().build();
 
       expect(() => userService.findOne(requestUser, id)).rejects.toThrow(
         ForbiddenException,
@@ -155,7 +156,7 @@ describe('UserService (unit)', () => {
 
   describe('Updates one user', () => {
     it('should update one user', async () => {
-      const id = '123';
+      const id = v4();
 
       jest.spyOn(userRepository, 'save').mockResolvedValueOnce({} as any);
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce({} as any);
@@ -170,7 +171,7 @@ describe('UserService (unit)', () => {
     });
 
     it('should update one user (admin)', async () => {
-      const id = '123';
+      const id = v4();
 
       jest.spyOn(userRepository, 'save').mockResolvedValueOnce({} as any);
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce({} as any);
@@ -185,7 +186,7 @@ describe('UserService (unit)', () => {
     });
 
     it('should throw a Not Found Exception if the user does not exist', async () => {
-      const id = '123';
+      const id = v4();
 
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce(null);
 
@@ -200,8 +201,8 @@ describe('UserService (unit)', () => {
     });
 
     it('should throw a Forbidden Exception if the request user is not and admin and not the user himself', () => {
-      const id = '123';
-      const requestUser = new UserFactory().withId('321').asUser().build();
+      const id = v4();
+      const requestUser = new UserFactory().withId(v4()).asUser().build();
 
       const dto = new UpdateUserDto();
       dto.name = 'Jane Doe';
@@ -214,7 +215,7 @@ describe('UserService (unit)', () => {
 
   describe('Deletes one user', () => {
     it('should delete one user', async () => {
-      const id = '123';
+      const id = v4();
 
       jest.spyOn(userRepository, 'remove').mockResolvedValueOnce({} as any);
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce({} as any);
@@ -226,7 +227,7 @@ describe('UserService (unit)', () => {
     });
 
     it('should delete one user', async () => {
-      const id = '123';
+      const id = v4();
 
       jest.spyOn(userRepository, 'remove').mockResolvedValueOnce({} as any);
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce({} as any);
@@ -238,7 +239,7 @@ describe('UserService (unit)', () => {
     });
 
     it('Exception if the user does not exist', async () => {
-      const id = '123';
+      const id = v4();
 
       jest.spyOn(userRepository, 'findOneBy').mockResolvedValueOnce(null);
 
@@ -250,8 +251,8 @@ describe('UserService (unit)', () => {
     });
 
     it('should throw a Forbidden Exception if the request user is not and admin and not the user himself', () => {
-      const id = '123';
-      const requestUser = new UserFactory().withId('321').asUser().build();
+      const id = v4();
+      const requestUser = new UserFactory().withId(v4()).asUser().build();
 
       expect(() => userService.deleteOne(requestUser, id)).rejects.toThrow(
         ForbiddenException,

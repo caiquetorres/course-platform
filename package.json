@@ -44,7 +44,8 @@
     "rxjs": "^7.2.0",
     "sqlite3": "^5.1.6",
     "typeorm": "^0.3.16",
-    "typeorm-cursor-pagination": "^0.10.1"
+    "typeorm-cursor-pagination": "^0.10.1",
+    "uuid": "^9.0.0"
   },
   "devDependencies": {
     "@automock/jest": "^1.0.1",
@@ -63,6 +64,7 @@
     "@types/passport-jwt": "^3.0.8",
     "@types/passport-local": "^1.0.35",
     "@types/supertest": "^2.0.11",
+    "@types/uuid": "^9.0.1",
     "@typescript-eslint/eslint-plugin": "^5.0.0",
     "@typescript-eslint/parser": "^5.0.0",
     "eslint": "^8.40.0",

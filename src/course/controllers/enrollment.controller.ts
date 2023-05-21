@@ -1,5 +1,10 @@
 import { Controller, Delete, Put } from '@nestjs/common';
-import { ApiOperation, ApiTags } from '@nestjs/swagger';
+import {
+  ApiCreatedResponse,
+  ApiOkResponse,
+  ApiOperation,
+  ApiTags,
+} from '@nestjs/swagger';
 
 import { ApiForbidden } from '../../common/decorators/api/api-forbidden.decorator';
 import { ApiNotFound } from '../../common/decorators/api/api-not-found.decorator';
@@ -9,6 +14,7 @@ import { InjectEnrollmentService } from '../decorators/inject-service.decorator'
 
 import { User } from '../../user/entities/user.entity';
 import { Course } from '../entities/course.entity';
+import { Enrollment } from '../entities/enrollment.entity';
 
 import { Role } from '../../user/enums/role.enum';
 
@@ -23,6 +29,10 @@ export class EnrollmentController {
   ) {}
 
   @ApiOperation({ summary: 'Enrolls a user into a course' })
+  @ApiCreatedResponse({
+    type: Enrollment,
+    description: 'The enrollment was successfully created',
+  })
   @ApiUnauthorized()
   @ApiForbidden()
   @ApiNotFound(Course)
@@ -32,6 +42,11 @@ export class EnrollmentController {
     return this._enrollmentService.enroll(requestUser, courseId);
   }
 
+  @ApiOperation({ summary: 'Withdraws a user into a course' })
+  @ApiOkResponse({
+    type: Enrollment,
+    description: 'The enrollment was successfully deleted',
+  })
   @ApiUnauthorized()
   @ApiForbidden()
   @ApiNotFound(Course)
