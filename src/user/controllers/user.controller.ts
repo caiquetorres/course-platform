@@ -104,7 +104,7 @@ export class UserController {
   @ApiUnauthorized()
   @AllowFor(Role.user)
   @Get('me')
-  getMe(@RequestUser() requestUser: User) {
+  findMe(@RequestUser() requestUser: User) {
     return this._userService.findOne(requestUser, requestUser.id);
   }
 
