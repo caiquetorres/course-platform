@@ -1,9 +1,6 @@
 import { Inject } from '@nestjs/common';
 
-import {
-  USER_COURSES_SERVICE,
-  USER_SERVICE,
-} from '../constants/service.constant';
+import { USER_COURSES_SERVICE, USER_SERVICE } from '../constants/user.constant';
 
 export function InjectUserService() {
   return Inject(USER_SERVICE);

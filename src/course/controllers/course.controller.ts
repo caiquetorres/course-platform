@@ -23,7 +23,7 @@ import { ApiUnauthorized } from '../../common/decorators/api/api-unauthorized.de
 import { AllowFor } from '../../common/decorators/auth/allow-for.decorator';
 import { Public } from '../../common/decorators/auth/public.decorator';
 import { RequestUser } from '../../common/decorators/request-user/request-user.decorator';
-import { InjectCourseService } from '../decorators/inject-course-service.decorator';
+import { InjectCourseService } from '../decorators/inject-service.decorator';
 
 import { User } from '../../user/entities/user.entity';
 import { Course } from '../entities/course.entity';

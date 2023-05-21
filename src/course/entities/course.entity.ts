@@ -1,8 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, ManyToMany, Relation } from 'typeorm';
+import { Column, Entity, OneToMany, Relation } from 'typeorm';
 
 import { BaseEntity } from '../../common/entities/base.entity';
-import { User } from '../../user/entities/user.entity';
+import { Enrollment } from './enrollment.entity';
 
 import { ICourse } from '../interfaces/course.interface';
 
@@ -16,8 +16,8 @@ export class Course extends BaseEntity implements ICourse {
   @Column({ nullable: false })
   price: number;
 
-  @ManyToMany(() => User, (user) => user.courses)
-  users: Relation<User>[];
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.course)
+  enrollments: Relation<Enrollment>[];
 
   constructor(partial: Partial<ICourse>) {
     super();

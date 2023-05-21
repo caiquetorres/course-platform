@@ -9,7 +9,7 @@ import { User } from '../entities/user.entity';
 import { CreateUserDto } from '../dtos/create-user.dto';
 import { UpdateUserDto } from '../dtos/update-user.dto';
 
-import { USER_SERVICE } from '../constants/service.constant';
+import { USER_SERVICE } from '../constants/user.constant';
 import { UserService } from './user.service';
 
 import { UserFactory } from '../factories/user.factory';

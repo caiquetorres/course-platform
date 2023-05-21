@@ -1,9 +1,13 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { Repository, FindOptionsUtils } from 'typeorm';
 import { buildPaginator } from 'typeorm-cursor-pagination';
 
-import { Course } from '../../course/entities/course.entity';
+import { Enrollment } from '../../course/entities/enrollment.entity';
 import { User } from '../entities/user.entity';
 
 import { Role } from '../enums/role.enum';
@@ -16,35 +20,46 @@ export class UserCoursesService implements IUserCoursesService {
   constructor(
     @InjectRepository(User)
     private readonly _userRepository: Repository<User>,
-    @InjectRepository(Course)
-    private readonly _courseRepository: Repository<Course>,
+    @InjectRepository(Enrollment)
+    private readonly _enrollmentRepository: Repository<Enrollment>,
   ) {}
 
-  findMany(requestUser: User, id: string, query: PageQuery) {
-    const find = () => {
+  async findMany(requestUser: User, id: string, query: PageQuery) {
+    const find = async () => {
       const paginator = buildPaginator({
-        entity: Course,
-        alias: 'courses',
+        entity: Enrollment,
+        alias: 'enrollment',
         paginationKeys: ['id'],
         query,
       });
 
-      const queryBuilder = this._courseRepository
-        .createQueryBuilder('courses')
-        .innerJoin('courses.users', 'user')
+      const queryBuilder = this._enrollmentRepository
+        .createQueryBuilder('enrollment')
+        .innerJoin('enrollment.user', 'user')
         .where('user.id = :id', { id });
 
       FindOptionsUtils.joinEagerRelations(
         queryBuilder,
         queryBuilder.alias,
-        this._courseRepository.metadata,
+        this._enrollmentRepository.metadata,
       );
 
-      return paginator.paginate(queryBuilder);
+      const { cursor, data } = await paginator.paginate(queryBuilder);
+
+      return {
+        cursor,
+        data: data.map((enrollment) => enrollment.course),
+      };
     };
 
     if (requestUser.hasRole(Role.admin)) {
       return find();
+    }
+
+    const user = await this._userRepository.findOneBy({ id });
+
+    if (!user) {
+      throw new NotFoundException(`User with id '${id}' not found`);
     }
 
     if (requestUser.id === id) {

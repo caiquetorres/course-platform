@@ -1,15 +1,8 @@
 import { ApiProperty } from '@nestjs/swagger';
-import {
-  Column,
-  Entity,
-  Index,
-  JoinTable,
-  ManyToMany,
-  Relation,
-} from 'typeorm';
+import { Column, Entity, Index, OneToMany, Relation } from 'typeorm';
 
 import { BaseEntity } from '../../common/entities/base.entity';
-import { Course } from '../../course/entities/course.entity';
+import { Enrollment } from '../../course/entities/enrollment.entity';
 
 import { Role } from '../enums/role.enum';
 
@@ -33,18 +26,20 @@ export class User extends BaseEntity implements IUser {
   email: string;
 
   @Exclude()
-  @ApiProperty({ example: 'JaneDoe123*' })
   @Column({ nullable: false, type: 'text' })
   password: string;
+
+  @Exclude()
+  @Column({ nullable: false, default: 0 })
+  freeCoursesCount: number;
 
   @ApiProperty({ example: ['user'] })
   @Expose({ name: 'permissions' })
   @Column({ nullable: false, type: 'simple-array' })
   roles: Role[];
 
-  @JoinTable({ name: 'user_course' })
-  @ManyToMany(() => Course, (course) => course.users)
-  courses: Relation<Course>[];
+  @OneToMany(() => Enrollment, (enrollment) => enrollment.owner)
+  enrollments: Relation<Enrollment>[];
 
   constructor(partial: Partial<IUser>) {
     super();
