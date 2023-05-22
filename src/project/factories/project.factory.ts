@@ -4,6 +4,8 @@ import { IUser } from '../../user/interfaces/user.interface';
 import { IProject } from '../interfaces/project.interface';
 
 export class ProjectFactory {
+  private _id: string | null = null;
+
   private _name: string | null = null;
 
   private _owner: IUser | null = null;
@@ -11,6 +13,11 @@ export class ProjectFactory {
   from(project: IProject) {
     this._name = project.name;
     this._owner = project.owner;
+    return this;
+  }
+
+  withId(id: string) {
+    this._id = id;
     return this;
   }
 
@@ -26,6 +33,7 @@ export class ProjectFactory {
 
   build() {
     return new Project({
+      id: this._id,
       owner: this._owner,
       name: this._name,
     });

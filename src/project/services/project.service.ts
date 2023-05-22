@@ -32,45 +32,45 @@ export class ProjectService implements IProjectService {
   /**
    * @inheritdoc
    */
-  createOne(requestUser: User, dto: CreateProjectDto): Promise<Project> {
-    const create = async () => {
-      let owner: User;
-
-      if (dto.ownerId) {
-        owner = await this._userRepository.findOneBy({ id: dto.ownerId });
-
-        if (!owner) {
-          throw new NotFoundException(`User with id '${owner.id}' not found`);
-        }
-
-        if (requestUser.id !== owner.id) {
-          throw new ForbiddenException(
-            'You do not have permission to access this resource',
-          );
-        }
-      } else {
-        owner = requestUser;
+  async createOne(requestUser: User, dto: CreateProjectDto): Promise<Project> {
+    validations: {
+      if (requestUser.hasRole(Role.admin)) {
+        break validations;
       }
 
-      const project = new ProjectFactory()
-        .withName(dto.name)
-        .withOwner(owner)
-        .build();
+      // The own user is creating the project.
+      if (!dto.ownerId && requestUser.hasRole(Role.pro)) {
+        break validations;
+      }
 
-      return this._projectRepository.save(project);
-    };
+      // The user is registering himself as owner.
+      if (requestUser.id === dto.ownerId && requestUser.hasRole(Role.pro)) {
+        break validations;
+      }
 
-    if (requestUser.hasRole(Role.admin)) {
-      return create();
+      throw new ForbiddenException(
+        'You do not have permission to access this resource',
+      );
     }
 
-    if (requestUser.hasRole(Role.pro)) {
-      return create();
+    let owner: User;
+
+    if (dto.ownerId) {
+      owner = await this._userRepository.findOneBy({ id: dto.ownerId });
+
+      if (!owner) {
+        throw new NotFoundException(`User with id '${owner.id}' not found`);
+      }
+    } else {
+      owner = requestUser;
     }
 
-    throw new ForbiddenException(
-      'You do not have permission to access this resource',
-    );
+    const project = new ProjectFactory()
+      .withName(dto.name)
+      .withOwner(owner)
+      .build();
+
+    return this._projectRepository.save(project);
   }
 
   async findOne(_requestUser: User, id: string): Promise<Project> {
@@ -105,67 +105,65 @@ export class ProjectService implements IProjectService {
     return paginator.paginate(queryBuilder);
   }
 
-  updateOne(
+  async updateOne(
     requestUser: User,
     id: string,
     dto: UpdateProjectDto,
   ): Promise<Project> {
-    const update = async () => {
-      let project = await this._projectRepository.findOne({
-        where: { id },
-        relations: ['owner'],
-      });
+    let project = await this._projectRepository.findOne({
+      where: { id },
+      relations: ['owner'],
+    });
 
-      if (!project) {
-        throw new NotFoundException(`Project with id '${id}' not found`);
-      }
-
-      if (project.owner.id !== requestUser.id) {
-        throw new ForbiddenException(
-          'You do not have permissions to access these sources',
-        );
-      }
-
-      project = new ProjectFactory().from(project).withName(dto.name).build();
-
-      return this._projectRepository.save(project);
-    };
-
-    if (requestUser.hasRole(Role.admin)) {
-      return update();
+    if (!project) {
+      throw new NotFoundException(`Project with id '${id}' not found`);
     }
 
-    throw new ForbiddenException(
-      'You do not have permissions to access these sources',
-    );
+    validations: {
+      if (requestUser.hasRole(Role.admin)) {
+        break validations;
+      }
+
+      if (project.owner.id === requestUser.id) {
+        break validations;
+      }
+
+      throw new ForbiddenException(
+        'You do not have permissions to access these sources',
+      );
+    }
+
+    project = new ProjectFactory().from(project).withName(dto.name).build();
+    return this._projectRepository.save(project);
   }
 
-  deleteOne(requestUser: User, id: string): Promise<Project> {
-    const remove = async () => {
-      const project = await this._projectRepository.findOne({
-        where: { id },
-        relations: ['owner'],
-      });
+  async deleteOne(requestUser: User, id: string): Promise<Project> {
+    const project = await this._projectRepository.findOne({
+      where: { id },
+      relations: ['owner'],
+    });
 
-      if (!project) {
-        throw new NotFoundException(`Project with id '${id}' not found`);
-      }
-
-      if (project.owner.id !== requestUser.id) {
-        throw new ForbiddenException(
-          'You do not have permissions to access these sources',
-        );
-      }
-
-      return this._projectRepository.remove(project);
-    };
-
-    if (requestUser.hasRole(Role.admin)) {
-      return remove();
+    if (!project) {
+      throw new NotFoundException(`Project with id '${id}' not found`);
     }
 
-    throw new ForbiddenException(
-      'You do not have permissions to access these sources',
-    );
+    validations: {
+      if (requestUser.hasRole(Role.admin)) {
+        break validations;
+      }
+
+      if (
+        requestUser.hasRole(Role.pro) &&
+        project.owner.id === requestUser.id
+      ) {
+        break validations;
+      }
+
+      throw new ForbiddenException(
+        'You do not have permissions to access these sources',
+      );
+    }
+
+    return this._projectRepository.remove(project);
   }
 }

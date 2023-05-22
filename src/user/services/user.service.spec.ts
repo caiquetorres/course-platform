@@ -161,13 +161,13 @@ describe('UserService (unit)', () => {
       jest.spyOn(userRepository, 'save').mockResolvedValueOnce({} as any);
       jest.spyOn(userRepository, 'findOne').mockResolvedValueOnce({} as any);
 
-      const requestUser = new UserFactory().withId(id).asGuest().build();
+      const requestUser = new UserFactory().withId(id).asUser().build();
 
       const dto = new UpdateUserDto();
       dto.name = 'Jane Doe';
 
-      const createdUser = await userService.updateOne(requestUser, id, dto);
-      expect(createdUser).toBeDefined();
+      const user = await userService.updateOne(requestUser, id, dto);
+      expect(user).toBeDefined();
     });
 
     it('should update one user (admin)', async () => {
