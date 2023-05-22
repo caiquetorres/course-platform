@@ -60,11 +60,11 @@ export class ProjectService implements IProjectService {
       return this._projectRepository.save(project);
     };
 
-    if (requestUser.hasRole(Role.pro)) {
+    if (requestUser.hasRole(Role.admin)) {
       return create();
     }
 
-    if (requestUser.hasRole(Role.admin)) {
+    if (requestUser.hasRole(Role.pro)) {
       return create();
     }
 

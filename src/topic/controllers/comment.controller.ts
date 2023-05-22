@@ -60,6 +60,7 @@ export class CommentController {
   })
   @ApiUnauthorized()
   @ApiForbidden()
+  @ApiNotFound(Topic)
   @AllowFor(/.*/)
   @Post()
   createOne(

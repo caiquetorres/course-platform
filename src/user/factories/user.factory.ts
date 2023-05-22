@@ -73,6 +73,11 @@ export class UserFactory {
     return this;
   }
 
+  asPro() {
+    this._roles.add(Role.pro);
+    return this;
+  }
+
   asAdmin() {
     this._roles.add(Role.admin);
     return this;
