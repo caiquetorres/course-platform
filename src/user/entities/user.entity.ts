@@ -5,6 +5,7 @@ import { BaseEntity } from '../../common/entities/base.entity';
 import { Enrollment } from '../../course/entities/enrollment.entity';
 import { Application } from '../../project/entities/application.entity';
 import { Project } from '../../project/entities/project.entity';
+import { Comment } from '../../topic/entities/comment.entity';
 import { Topic } from '../../topic/entities/topic.entity';
 
 import { Role } from '../enums/role.enum';
@@ -54,6 +55,10 @@ export class User extends BaseEntity implements IUser {
   @Exclude()
   @OneToMany(() => Topic, (topic) => topic.owner)
   topics: Relation<Topic>[];
+
+  @Exclude()
+  @OneToMany(() => Comment, (comment) => comment.owner)
+  comments: Relation<Comment>[];
 
   constructor(partial: Partial<IUser>) {
     super();
