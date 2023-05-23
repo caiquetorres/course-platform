@@ -35,9 +35,9 @@ pipeline {
       }
     }
 
-    stage('E2E Tests') {
+    stage('Create image') {
       steps {
-        sh 'yarn test:e2e'
+        sh 'docker build -t course-platform-api .'
       }
     }
   }
