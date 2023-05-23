@@ -1,73 +1,67 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="200" alt="Nest Logo" /></a>
-</p>
+<img
+src="https://github.com/caiquetorres/course-platform/assets/56696506/96d85fa1-fbf9-4f16-897c-38aa12b313dd"
+alt="Logo"
+height="80"
+/>
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+<a><img src="https://badgen.net/badge/rust/1.0.0/56D7CC?label=" alt="Rust" /></a>
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://coveralls.io/github/nestjs/nest?branch=master" target="_blank"><img src="https://coveralls.io/repos/github/nestjs/nest/badge.svg?branch=master#9" alt="Coverage" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+<a><img src="https://badgen.net/badge/nodejs/18.12.1/blue" alt="Node" /></a>
 
-## Description
+# 🧐 Installation
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+Follow these steps to install and set up the application:
 
-## Installation
+Clone the repository:
 
-```bash
-$ yarn install
+```sh
+git clone "https://github.com/caiquetorres/course-platform.git"
 ```
 
-## Running the app
+Install the dependencies:
 
-```bash
-# development
-$ yarn run start
+> You can use either Yarn or npm to install the project dependencies. Choose one of the following options:
 
-# watch mode
-$ yarn run start:dev
+Using Yarn:
 
-# production mode
-$ yarn run start:prod
+```sh
+yarn install
 ```
 
-## Test
+Using npm:
 
-```bash
-# unit tests
-$ yarn run test
-
-# e2e tests
-$ yarn run test:e2e
-
-# test coverage
-$ yarn run test:cov
+```sh
+npm install
 ```
 
-## Support
+# 😎 Running the application
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+To get started, you'll need to set up your database. The Course Platform Backend is designed to work with Postgres, and it provides a convenient `docker-compose` file to create a simple local database for testing and debugging purposes.
 
-## Stay in touch
+Run the following command to start the database container:
 
-- Author - [Kamil Myśliwiec](https://kamilmysliwiec.com)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+```sh
+docker compose up -d postgres
+```
 
-## License
+If you prefer to use an existing Postgres instance or a different database solution, you can update the database configuration in the .env file located in the project's root directory. Modify the relevant environment variables such as `DB_HOST`, `DB_PORT`, `DB_USERNAME`, `DB_PASSWORD`, and `DB_DATABASE` according to your database setup.
 
-Nest is [MIT licensed](LICENSE).
+Make sure to save the changes in the .env file and restart the application for the new configuration to take effect.
+
+Depending on your package manager preference, you can use either Yarn or npm to start the application. Choose one of the following options:
+
+- Using Yarn:
+
+```sh
+yarn start
+```
+
+- Using npm:
+
+```sh
+npm start
+```
+
+The application will start running, and you should see log messages indicating that the server has started successfully.
+
+Once the server is up and running, you can access the application through `http://localhost:3000`.
