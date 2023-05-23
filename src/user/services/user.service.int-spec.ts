@@ -136,12 +136,12 @@ describe('UserService (int)', () => {
         .asUser()
         .build();
 
-      const createdUser = await userService.updateOne(
+      const user = await userService.updateOne(
         requestUser,
         defaultUser.id,
         dto,
       );
-      expect(createdUser).toBeDefined();
+      expect(user).toBeDefined();
     });
 
     it('should throw a Not Found Exception if the user does not exist', async () => {

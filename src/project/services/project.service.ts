@@ -70,6 +70,7 @@ export class ProjectService implements IProjectService {
       .withOwner(owner)
       .build();
 
+    delete project.id;
     return this._projectRepository.save(project);
   }
 

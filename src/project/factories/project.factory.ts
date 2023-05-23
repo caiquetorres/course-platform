@@ -11,6 +11,7 @@ export class ProjectFactory {
   private _owner: IUser | null = null;
 
   from(project: IProject) {
+    this._id = project.id;
     this._name = project.name;
     this._owner = project.owner;
     return this;
