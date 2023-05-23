@@ -10,7 +10,7 @@ import {
 } from 'class-validator';
 
 export class CreateCourseDto implements Partial<ICourse> {
-  @ApiProperty({ example: 'Engenharia de Software' })
+  @ApiProperty({ example: 'Software Engineering' })
   @IsNotEmpty({ message: 'It is required to send the course name' })
   @MinLength(2, {
     message:

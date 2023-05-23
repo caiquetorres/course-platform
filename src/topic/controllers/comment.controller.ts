@@ -111,6 +111,7 @@ export class CommentController {
     return this._commentService.findMany(requestUser, topicId, query);
   }
 
+  @ApiOperation({ summary: 'Deletes a comment given it id' })
   @ApiUnauthorized()
   @ApiForbidden()
   @ApiNotFound(Comment)

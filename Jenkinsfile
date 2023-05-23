@@ -29,15 +29,15 @@ pipeline {
       }
     }
 
-    stage('E2E Tests') {
-      steps {
-        sh 'yarn test:e2e'
-      }
-    }
-
     stage('Build') {
       steps {
         sh 'yarn build'
+      }
+    }
+
+    stage('E2E Tests') {
+      steps {
+        sh 'yarn test:e2e'
       }
     }
   }

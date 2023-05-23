@@ -8,7 +8,7 @@ import { ICourse } from '../interfaces/course.interface';
 
 @Entity('courses')
 export class Course extends BaseEntity implements ICourse {
-  @ApiProperty({ example: 'Engenharia de Software' })
+  @ApiProperty({ example: 'Software Engineering' })
   @Column({ length: 32, nullable: false })
   name: string;
 

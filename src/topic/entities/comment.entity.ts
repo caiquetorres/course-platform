@@ -1,11 +1,13 @@
 import { ApiProperty } from '@nestjs/swagger';
-import { Column, Entity, ManyToOne, Relation } from 'typeorm';
+import { Column, Entity, ManyToOne, OneToMany, Relation } from 'typeorm';
 
 import { BaseEntity } from '../../common/entities/base.entity';
 import { User } from '../../user/entities/user.entity';
+import { Feedback } from './feedback.entity';
 import { Topic } from './topic.entity';
 
 import { IComment } from '../interfaces/comment.interface';
+import { Exclude } from 'class-transformer';
 
 @Entity('comments')
 export class Comment extends BaseEntity implements IComment {
@@ -18,6 +20,10 @@ export class Comment extends BaseEntity implements IComment {
 
   @ManyToOne(() => Topic, (topic) => topic.comments)
   topic: Relation<Topic>;
+
+  @Exclude()
+  @OneToMany(() => Feedback, (feedback) => feedback.comment)
+  feedbacks: Relation<Feedback>[];
 
   constructor(partial: Partial<IComment>) {
     super();
