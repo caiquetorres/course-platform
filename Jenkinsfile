@@ -53,7 +53,20 @@ pipeline {
 
   post {
     always {
-      sh 'docker logout'
+      script {
+        def title
+        def description
+
+        if (currentBuild.currentResult == 'SUCCESS') {
+          title = 'Pipeline succeeded!'
+          description = "The app has been built and has already been uploaded to DockerHub"
+        } else {
+          title = 'Pipeline failed!'
+          description = "Something happened while running the pipeline"
+        }
+
+        discordSend description: description, footer: '', image: '', link: '', result: currentBuild.currentResult, scmWebUrl: '', thumbnail: '', title: title, webhookURL: 'https://discord.com/api/webhooks/1109608740216389702/xAUq1P10hz8HFYoEiKAbWkbkVk3bw-yvEE-s0Wwauge_6vkL7mvTThHzNwaAgWg86v5l'
+      }
     }
   }
 }
