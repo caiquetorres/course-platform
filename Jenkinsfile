@@ -1,6 +1,10 @@
 pipeline {
   agent any
 
+  environment {
+    DOCKERHUB_CREDENTIALS = credentials('dockerhub')
+  }
+
   tools {
     nodejs '18.12.1'
   }
@@ -37,8 +41,16 @@ pipeline {
 
     stage('Create image') {
       steps {
-        sh 'docker build -t course-platform-api .'
+        sh 'docker build -t caiquetorres/course-platform .'
+        sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
+        sh 'docker push caiquetorres/course-platform'
       }
+    }
+  }
+
+  post {
+    always {
+      sh 'docker logout'
     }
   }
 }
