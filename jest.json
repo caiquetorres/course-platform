@@ -6,6 +6,7 @@
     "^.+\\.(t|j)s$": "@swc/jest"
   },
   "coverageDirectory": "../coverage",
+  "coverageReporters": ["text", "cobertura"],
   "testEnvironment": "node",
   "verbose": true
 }
