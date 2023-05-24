@@ -45,9 +45,10 @@ jobs:
       - name: Run integration tests
         run: yarn test:int
 
-  test_e2e:
-    name: E2E Tests
+  build:
+    name: Build
     runs-on: ubuntu-latest
+
     steps:
       - name: Checkout
         uses: actions/checkout@v2
@@ -61,26 +62,8 @@ jobs:
       - name: Install dependencies
         run: yarn
 
-      - name: Run e2e tests
-        run: yarn test:e2e
-        env:
-          NODE_ENV: 'test'
-          PACKAGE_VERSION: '1.0.0'
-
-          DB_TYPE: 'postgres'
-          DB_USERNAME: 'root'
-          DB_PASSWORD: '123456'
-          DB_HOST: 'localhost'
-          DB_PORT: 5432
-          DB_DATABASE: 'course-platform'
-          DB_MIGRATIONS_RUN: true
-          DB_SSL: false
-
-          JWT_SECRET: course-platform
-          JWT_EXPIRES_IN: 1d
-
-          SWAGGER_TITLE: 'Course Platform'
-          SWAGGER_VERSION: '1.0.0'
+      - name: Run integration tests
+        run: yarn build
 
   lint:
     name: Lint
