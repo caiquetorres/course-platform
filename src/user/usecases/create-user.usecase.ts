@@ -12,10 +12,21 @@ import { Password } from '../domain/value-objects/password';
 import { Username } from '../domain/value-objects/username';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 
+/**
+ * Use case for creating a new user.
+ */
 @Injectable()
 export class CreateUserUseCase {
   constructor(private readonly _userRepository: UserRepository) {}
 
+  /**
+   * Creates a new user with the provided data.
+   *
+   * @param requestUser The user initiating the creation request.
+   * @param dto The data for creating the new user.
+   * @returns A promise that resolves to an `Either` type representing
+   * either an error or the created user.
+   */
   async create(
     _requestUser: User,
     dto: CreateUserDto,
@@ -42,12 +53,26 @@ export class CreateUserUseCase {
     return new Right(user);
   }
 
+  /**
+   * Checks if a user with the specified username exists.
+   *
+   * @param username The username to check.
+   * @returns A promise that resolves to a boolean indicating if a user
+   * with the username exists.
+   */
   private async _hasUserWithUsername(username: string): Promise<boolean> {
     return this._userRepository
       .findOneByUsername(username)
       .then((res) => !!res);
   }
 
+  /**
+   * Checks if a user with the specified email exists.
+   *
+   * @param email The email to check.
+   * @returns A promise that resolves to a boolean indicating if a user
+   * with the email exists.
+   */
   private async _hasUserWithEmail(email: string): Promise<boolean> {
     return this._userRepository.findOneByEmail(email).then((res) => !!res);
   }

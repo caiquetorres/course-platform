@@ -6,27 +6,51 @@ import { IUser } from '../domain/interfaces/user.interface';
 import { v4 } from 'uuid';
 
 export class UserPresenter {
+  /**
+   * The unique identifier for the user.
+   */
   @ApiProperty({ example: v4() })
   readonly id: string;
 
+  /**
+   * The date and time when the user was created.
+   */
   @ApiProperty({ example: new Date() })
   readonly createdAt: Date;
 
+  /**
+   * The date and time when the user was last updated.
+   */
   @ApiProperty({ example: new Date() })
   readonly updatedAt: Date;
 
+  /**
+   * The date and time when the user was deleted.
+   */
   @ApiProperty({ example: null })
   readonly deletedAt: Date;
 
+  /**
+   * The name of the user.
+   */
   @ApiProperty({ example: 'Jane Doe' })
   readonly name: string;
 
-  @ApiProperty({ example: 'janedoe@email.com' })
-  readonly email: string;
-
+  /**
+   * The username of the user.
+   */
   @ApiProperty({ example: 'janedoe' })
   readonly username: string;
 
+  /**
+   * The email address of the user.
+   */
+  @ApiProperty({ example: 'janedoe@email.com' })
+  readonly email: string;
+
+  /**
+   * The roles assigned to the user.
+   */
   @ApiProperty({ example: [Role.user] })
   readonly permissions: Role[];
 
