@@ -1,23 +1,19 @@
 import { Module } from '@nestjs/common';
 import { JwtModule } from '@nestjs/jwt';
-import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { User } from '../user/entities/user.entity';
+import { AuthService } from './infrastructure/services/auth.service';
 
-import { AuthService } from './auth.service';
+import { AuthController } from './presentation/auth.controller';
 
-import { AuthController } from './auth.controller';
-
-import { JwtConfig } from '../common/config/jwt/jwt.config';
-import { JwtStrategy } from './strategies/jwt.strategy';
-import { LocalStrategy } from './strategies/local.strategy';
+import { JwtConfig } from '../common/infrastructure/config/jwt/jwt.config';
+import { UserModule } from '../user/user.module';
+import { JwtStrategy } from './infrastructure/strategies/jwt.strategy';
+import { LocalStrategy } from './infrastructure/strategies/local.strategy';
+import { LoginUseCase } from './usecases/login.usecase';
 
 @Module({
-  imports: [
-    TypeOrmModule.forFeature([User]),
-    JwtModule.registerAsync({ useClass: JwtConfig }),
-  ],
-  providers: [AuthService, LocalStrategy, JwtStrategy],
+  imports: [UserModule, JwtModule.registerAsync({ useClass: JwtConfig })],
+  providers: [LoginUseCase, AuthService, LocalStrategy, JwtStrategy],
   controllers: [AuthController],
 })
 export class AuthModule {}

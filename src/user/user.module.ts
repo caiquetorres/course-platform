@@ -1,30 +1,24 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Course } from '../course/entities/course.entity';
-import { Enrollment } from '../course/entities/enrollment.entity';
-import { User } from './entities/user.entity';
+import { UserEntity } from './infrastructure/entities/user.entity';
 
-import { UserCoursesService } from './services/user-courses.service';
-import { UserService } from './services/user.service';
+import { UserController } from './presentation/user.controller';
 
-import { UserCoursesController } from './controllers/user-courses.controller';
-import { UserController } from './controllers/user.controller';
-
-import { USER_COURSES_SERVICE, USER_SERVICE } from './constants/user.constant';
+import { UserTypeOrmRepository } from './infrastructure/repositories/typeorm/user-typeorm.repository';
+import { UserRepository } from './infrastructure/repositories/user.repository';
+import { CreateUserUseCase } from './usecases/create-user.usecase';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Course, Enrollment])],
-  controllers: [UserController, UserCoursesController],
+  imports: [TypeOrmModule.forFeature([UserEntity])],
+  controllers: [UserController],
   providers: [
+    CreateUserUseCase,
     {
-      provide: USER_SERVICE,
-      useClass: UserService,
-    },
-    {
-      provide: USER_COURSES_SERVICE,
-      useClass: UserCoursesService,
+      provide: UserRepository,
+      useClass: UserTypeOrmRepository,
     },
   ],
+  exports: [UserRepository],
 })
 export class UserModule {}

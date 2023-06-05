@@ -1,12 +1,15 @@
-import { DataSource } from 'typeorm'
+import { DataSource } from 'typeorm';
 
-import * as dotenv from 'dotenv'
-import * as path from 'path'
+import * as dotenv from 'dotenv';
+import * as path from 'path';
 
-dotenv.config()
+dotenv.config();
 
-const entitiesPath = path.resolve(__dirname, 'src/**/*.entity.ts')
-const migrationsPath = path.resolve(__dirname, 'src/migrations/*.ts')
+const entitiesPath = path.resolve(__dirname, 'src/**/*.entity.ts');
+const migrationsPath = path.resolve(
+  __dirname,
+  'src/common/infrastructure/migrations/*.ts',
+);
 
 const dataSource = new DataSource({
   type: process.env.DB_TYPE as any,
@@ -19,6 +22,6 @@ const dataSource = new DataSource({
   synchronize: false,
   entities: [entitiesPath],
   migrations: [migrationsPath],
-})
+});
 
-export default dataSource
+export default dataSource;
