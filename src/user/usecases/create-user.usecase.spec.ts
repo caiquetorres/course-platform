@@ -22,74 +22,68 @@ describe('CreateUserUseCase (unit)', () => {
     userRepository = unitRef.get(UserRepository as Type);
   });
 
-  describe('Create one user', () => {
-    it('should create one user', async () => {
-      jest.spyOn(userRepository, 'createOne').mockResolvedValueOnce({} as any);
+  it('should create one user', async () => {
+    jest.spyOn(userRepository, 'createOne').mockResolvedValueOnce({} as any);
 
-      jest
-        .spyOn(userRepository, 'findOneByUsername')
-        .mockResolvedValueOnce(null);
+    jest.spyOn(userRepository, 'findOneByUsername').mockResolvedValueOnce(null);
 
-      jest.spyOn(userRepository, 'findOneByEmail').mockResolvedValueOnce(null);
+    jest.spyOn(userRepository, 'findOneByEmail').mockResolvedValueOnce(null);
 
-      const requestUser = new User({
-        roles: new Set([Role.guest]),
-      } as IUser);
+    const requestUser = new User({
+      roles: new Set([Role.guest]),
+    } as IUser);
 
-      const dto = new CreateUserDto();
-      dto.name = 'Jane Doe';
-      dto.username = 'janedoe';
-      dto.email = 'jane.doe@email.com';
-      dto.password = 'JaneDoe123*';
+    const dto = new CreateUserDto();
+    dto.name = 'Jane Doe';
+    dto.username = 'janedoe';
+    dto.email = 'jane.doe@email.com';
+    dto.password = 'JaneDoe123*';
 
-      const result = await createUserUseCase.create(requestUser, dto);
-      expect(result.isRight()).toBeTruthy();
-    });
+    const result = await createUserUseCase.create(requestUser, dto);
+    expect(result.isRight()).toBeTruthy();
+  });
 
-    it('should throw a Conflict Exception due to conflicted username', async () => {
-      jest
-        .spyOn(userRepository, 'findOneByUsername')
-        .mockResolvedValueOnce({} as User);
+  it('should throw a Conflict Exception due to conflicted username', async () => {
+    jest
+      .spyOn(userRepository, 'findOneByUsername')
+      .mockResolvedValueOnce({} as User);
 
-      jest.spyOn(userRepository, 'findOneByEmail').mockResolvedValueOnce(null);
+    jest.spyOn(userRepository, 'findOneByEmail').mockResolvedValueOnce(null);
 
-      const requestUser = new User({
-        roles: new Set([Role.guest]),
-      } as IUser);
+    const requestUser = new User({
+      roles: new Set([Role.guest]),
+    } as IUser);
 
-      const dto = new CreateUserDto();
-      dto.name = 'Jane Doe';
-      dto.username = 'janedoe';
-      dto.email = 'jane.doe@email.com';
-      dto.password = 'JaneDoe123*';
+    const dto = new CreateUserDto();
+    dto.name = 'Jane Doe';
+    dto.username = 'janedoe';
+    dto.email = 'jane.doe@email.com';
+    dto.password = 'JaneDoe123*';
 
-      const result = await createUserUseCase.create(requestUser, dto);
-      expect(result.isRight()).toBeFalsy();
-      expect(result.value).toBeInstanceOf(DuplicatedUsernameError);
-    });
+    const result = await createUserUseCase.create(requestUser, dto);
+    expect(result.isRight()).toBeFalsy();
+    expect(result.value).toBeInstanceOf(DuplicatedUsernameError);
+  });
 
-    it('should throw a Conflict Exception due to conflicted email', async () => {
-      jest
-        .spyOn(userRepository, 'findOneByUsername')
-        .mockResolvedValueOnce(null);
+  it('should throw a Conflict Exception due to conflicted email', async () => {
+    jest.spyOn(userRepository, 'findOneByUsername').mockResolvedValueOnce(null);
 
-      jest
-        .spyOn(userRepository, 'findOneByEmail')
-        .mockResolvedValueOnce({} as User);
+    jest
+      .spyOn(userRepository, 'findOneByEmail')
+      .mockResolvedValueOnce({} as User);
 
-      const requestUser = new User({
-        roles: new Set([Role.guest]),
-      } as IUser);
+    const requestUser = new User({
+      roles: new Set([Role.guest]),
+    } as IUser);
 
-      const dto = new CreateUserDto();
-      dto.name = 'Jane Doe';
-      dto.username = 'janedoe';
-      dto.email = 'jane.doe@email.com';
-      dto.password = 'JaneDoe123*';
+    const dto = new CreateUserDto();
+    dto.name = 'Jane Doe';
+    dto.username = 'janedoe';
+    dto.email = 'jane.doe@email.com';
+    dto.password = 'JaneDoe123*';
 
-      const result = await createUserUseCase.create(requestUser, dto);
-      expect(result.isRight()).toBeFalsy();
-      expect(result.value).toBeInstanceOf(DuplicatedEmailError);
-    });
+    const result = await createUserUseCase.create(requestUser, dto);
+    expect(result.isRight()).toBeFalsy();
+    expect(result.value).toBeInstanceOf(DuplicatedEmailError);
   });
 });

@@ -29,7 +29,7 @@ import { ForbiddenError } from '../../common/domain/errors/forbidden.error';
 import { DuplicatedEmailError } from '../domain/errors/duplicated-email.error';
 import { DuplicatedUsernameError } from '../domain/errors/duplicated-username.error';
 import { CreateUserUseCase } from '../usecases/create-user.usecase';
-import { FindMeUseCase } from '../usecases/get-me.usecase';
+import { FindMeUseCase } from '../usecases/find-me.usecase';
 import { UserPresenter } from './user.presenter';
 
 @ApiTags('users')

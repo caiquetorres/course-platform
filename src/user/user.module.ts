@@ -8,7 +8,7 @@ import { UserController } from './presentation/user.controller';
 import { UserTypeOrmRepository } from './infrastructure/repositories/typeorm/user-typeorm.repository';
 import { UserRepository } from './infrastructure/repositories/user.repository';
 import { CreateUserUseCase } from './usecases/create-user.usecase';
-import { FindMeUseCase } from './usecases/get-me.usecase';
+import { FindMeUseCase } from './usecases/find-me.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([UserEntity])],

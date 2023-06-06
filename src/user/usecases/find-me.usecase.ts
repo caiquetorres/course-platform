@@ -17,7 +17,7 @@ export class FindMeUseCase {
   /**
    * Gets the user who is making the request.
    *
-   * @param requestUser The user who is making the request.
+   * @param requestUser The user making the request.
    * @returns A promise that resolves to an `Either` type representing
    * either an error or the found user.
    */
