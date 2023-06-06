@@ -22,7 +22,7 @@ export class CreateUserUseCase {
   /**
    * Creates a new user with the provided data.
    *
-   * @param requestUser The user initiating the creation request.
+   * @param requestUser The user who is making the request.
    * @param dto The data for creating the new user.
    * @returns A promise that resolves to an `Either` type representing
    * either an error or the created user.
