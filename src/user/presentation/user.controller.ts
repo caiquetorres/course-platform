@@ -1,22 +1,19 @@
 import {
   Body,
-  ConflictException,
   Controller,
-  ForbiddenException,
   Get,
-  InternalServerErrorException,
+  Param,
+  ParseUUIDPipe,
   Post,
+  Query,
 } from '@nestjs/common';
 import {
-  ApiBadRequestResponse,
-  ApiConflictResponse,
   ApiCreatedResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
 } from '@nestjs/swagger';
 
-import { ApiUnauthorized } from '../../common/infrastructure/decorators/api/api-unauthorized.decorator';
 import { AllowFor } from '../../common/infrastructure/decorators/auth/allow-for.decorator';
 import { Public } from '../../common/infrastructure/decorators/auth/public.decorator';
 import { RequestUser } from '../../common/infrastructure/decorators/request-user/request-user.decorator';
@@ -25,11 +22,12 @@ import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 import { CreateUserDto } from './create-user.dto';
 
-import { ForbiddenError } from '../../common/domain/errors/forbidden.error';
-import { DuplicatedEmailError } from '../domain/errors/duplicated-email.error';
-import { DuplicatedUsernameError } from '../domain/errors/duplicated-username.error';
+import { PageQuery } from '../../common/presentation/page.query';
 import { CreateUserUseCase } from '../usecases/create-user.usecase';
+import { FindManyUsersUseCase } from '../usecases/find-many-users.usecase';
 import { FindMeUseCase } from '../usecases/find-me.usecase';
+import { FindOneUserUseCase } from '../usecases/find-one-user.usecase';
+import { UserPagePresenter } from './user-page.presenter';
 import { UserPresenter } from './user.presenter';
 
 @ApiTags('users')
@@ -38,6 +36,8 @@ export class UserController {
   constructor(
     private readonly _createUserUseCase: CreateUserUseCase,
     private readonly _getMeUseCase: FindMeUseCase,
+    private readonly _findOneUseCase: FindOneUserUseCase,
+    private readonly _findManyUsersUseCase: FindManyUsersUseCase,
   ) {}
 
   /**
@@ -54,26 +54,6 @@ export class UserController {
     type: UserPresenter,
     description: 'The user was successfully created',
   })
-  @ApiBadRequestResponse({
-    description: 'The payload was sent with invalid or missing fields',
-    schema: {
-      example: {
-        statusCode: 400,
-        message: ['It is required to send the user username'],
-        error: 'Bad Request',
-      },
-    },
-  })
-  @ApiConflictResponse({
-    description: 'An user with the given email or username already exists',
-    schema: {
-      example: {
-        status: 409,
-        message: "The user with the email 'jane.doe@puppy.com' already exists",
-        error: 'Conflict',
-      },
-    },
-  })
   @Public()
   @Post()
   async createOne(
@@ -83,19 +63,10 @@ export class UserController {
     const result = await this._createUserUseCase.create(requestUser, dto);
 
     if (result.isRight()) {
-      return new UserPresenter(result.value);
+      new UserPresenter(result.value);
     }
 
-    if (
-      result.value instanceof DuplicatedEmailError ||
-      result.value instanceof DuplicatedUsernameError
-    ) {
-      throw new ConflictException(result.value.message);
-    }
-
-    throw new InternalServerErrorException(
-      'An issue occurred during user creation. If the error persists, please contact the administrators.',
-    );
+    throw result.value;
   }
 
   /**
@@ -105,15 +76,8 @@ export class UserController {
    * @returns A Promise that resolves to the found user entity.
    * @throws {UnauthorizedException} If the user is not authenticated.
    */
-  @ApiOperation({
-    summary: 'Retrieves the logged user',
-    requestBody: null,
-  })
-  @ApiOkResponse({
-    type: User,
-    description: 'The entity was found',
-  })
-  @ApiUnauthorized()
+  @ApiOperation({ summary: 'Retrieves the logged user', requestBody: null })
+  @ApiOkResponse({ type: UserPresenter, description: 'The entity was found' })
   @AllowFor(Role.user)
   @Get('me')
   async findMe(@RequestUser() requestUser: User) {
@@ -123,12 +87,60 @@ export class UserController {
       return new UserPresenter(result.value);
     }
 
-    if (result.value instanceof ForbiddenError) {
-      throw new ForbiddenException(result.value.message);
+    throw result.value;
+  }
+
+  /**
+   * Finds a user with the given id.
+   *
+   * @param id The id of the user to find.
+   * @returns A Promise that resolves to the found user.
+   * @throws {NotFoundException} If no user with the given id is found.
+   */
+  @ApiOperation({ summary: 'Retrieves a user given it id' })
+  @ApiOkResponse({ type: UserPresenter, description: 'The user was found' })
+  @AllowFor(Role.user)
+  @Get(':id')
+  async findOne(
+    @RequestUser() requestUser: User,
+    @Param('id', ParseUUIDPipe) id: string,
+  ) {
+    const result = await this._findOneUseCase.findOne(requestUser, id);
+
+    if (result.isRight()) {
+      return new UserPresenter(result.value);
     }
 
-    throw new InternalServerErrorException(
-      'An issue occurred during user creation. If the error persists, please contact the administrators.',
+    if (result.isRight()) {
+      new UserPresenter(result.value);
+    }
+
+    throw result.value;
+  }
+
+  /**
+   * Finds multiple users based on the provided query parameters.
+   *
+   * @param query The query object specifying pagination parameters and
+   * filters.
+   * @param requestUser The user making the request.
+   * @returns A Promise that resolves to a paginated list of users.
+   * @throws {ForbiddenException} If the user does not have permission to access the resource.
+   */
+  @ApiOperation({ summary: 'Retrieves several users' })
+  @ApiOkResponse({ type: UserPagePresenter, description: 'The list of users' })
+  @AllowFor(Role.admin)
+  @Get()
+  async findMany(@RequestUser() requestUser: User, @Query() query: PageQuery) {
+    const result = await this._findManyUsersUseCase.findMany(
+      requestUser,
+      query,
     );
+
+    if (result.isRight()) {
+      return result.value;
+    }
+
+    throw result.value;
   }
 }

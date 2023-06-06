@@ -1,10 +1,13 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsUtils, Repository } from 'typeorm';
+import { buildPaginator } from 'typeorm-cursor-pagination';
 
 import { UserEntity } from '../../entities/user.entity';
 
 import { User } from '../../../domain/models/user';
 
+import { IPage } from '../../../../common/domain/interfaces/page.interface';
+import { PageQuery } from '../../../../common/presentation/page.query';
 import { Email } from '../../../domain/value-objects/email';
 import { Password } from '../../../domain/value-objects/password';
 import { Username } from '../../../domain/value-objects/username';
@@ -40,6 +43,29 @@ export class UserTypeOrmRepository extends UserRepository {
       where: [{ username: usernameOrEmail }, { email: usernameOrEmail }],
     });
     return user ? this._toModel(user) : null;
+  }
+
+  override async findMany(query: PageQuery): Promise<IPage<User>> {
+    const paginator = buildPaginator({
+      entity: UserEntity,
+      alias: 'users',
+      paginationKeys: ['id'],
+      query,
+    });
+
+    const queryBuilder = this._repository.createQueryBuilder('users');
+
+    FindOptionsUtils.joinEagerRelations(
+      queryBuilder,
+      queryBuilder.alias,
+      this._repository.metadata,
+    );
+
+    const page = await paginator.paginate(queryBuilder);
+    return {
+      cursor: page.cursor,
+      data: page.data.map((entity) => this._toModel(entity)),
+    };
   }
 
   override async createOne(user: User): Promise<User> {

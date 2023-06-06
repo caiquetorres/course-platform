@@ -1,22 +1,21 @@
-import { Type } from '@nestjs/common';
+import { ForbiddenException, Type } from '@nestjs/common';
 
 import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 
-import { ForbiddenError } from '../../common/domain/errors/forbidden.error';
 import { IUser } from '../domain/interfaces/user.interface';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 import { FindMeUseCase } from './find-me.usecase';
 import { TestBed } from '@automock/jest';
 
 describe('FindMeUseCase (unit)', () => {
-  let createUserUseCase: FindMeUseCase;
+  let useCase: FindMeUseCase;
   let userRepository: UserRepository;
 
   beforeEach(() => {
     const { unit, unitRef } = TestBed.create(FindMeUseCase).compile();
 
-    createUserUseCase = unit;
+    useCase = unit;
     userRepository = unitRef.get(UserRepository as Type);
   });
 
@@ -27,7 +26,7 @@ describe('FindMeUseCase (unit)', () => {
       roles: new Set([Role.user]),
     } as IUser);
 
-    const result = await createUserUseCase.findMe(requestUser);
+    const result = await useCase.findMe(requestUser);
 
     expect(result.isRight()).toBeTruthy();
     expect(result.value).toBeDefined();
@@ -40,9 +39,9 @@ describe('FindMeUseCase (unit)', () => {
       roles: new Set([Role.guest]),
     } as IUser);
 
-    const result = await createUserUseCase.findMe(requestUser);
+    const result = await useCase.findMe(requestUser);
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toBeInstanceOf(ForbiddenError);
+    expect(result.value).toBeInstanceOf(ForbiddenException);
   });
 });

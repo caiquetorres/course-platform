@@ -1,10 +1,9 @@
-import { Injectable } from '@nestjs/common';
+import { ForbiddenException, Injectable } from '@nestjs/common';
 
 import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 
 import { Either, Left, Right } from '../../common/domain/classes/either';
-import { ForbiddenError } from '../../common/domain/errors/forbidden.error';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 
 /**
@@ -23,7 +22,11 @@ export class FindMeUseCase {
    */
   async findMe(requestUser: User): Promise<Either<Error, User>> {
     if (requestUser.hasRole(Role.guest)) {
-      return new Left(new ForbiddenError());
+      return new Left(
+        new ForbiddenException(
+          'You do not have permissions to access these sources',
+        ),
+      );
     }
 
     const user = await this._userRepository.findOneById(requestUser.id);

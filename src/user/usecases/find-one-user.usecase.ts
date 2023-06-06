@@ -1,18 +1,20 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ForbiddenException,
+  Injectable,
+  NotFoundException,
+} from '@nestjs/common';
 
 import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 
 import { Either, Left, Right } from '../../common/domain/classes/either';
-import { ForbiddenError } from '../../common/domain/errors/forbidden.error';
-import { UserNotFoundError } from '../domain/errors/user-not-found.error';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 
 /**
  * Use case for getting a user given his id.
  */
 @Injectable()
-export class FindOneUseCase {
+export class FindOneUserUseCase {
   constructor(private readonly _userRepository: UserRepository) {}
 
   /**
@@ -30,7 +32,11 @@ export class FindOneUseCase {
     const user = await this._userRepository.findOneById(userId);
 
     if (!user) {
-      return new Left(UserNotFoundError.withId(userId));
+      return new Left(
+        new NotFoundException(
+          `The user identified by '${userId}' was not found`,
+        ),
+      );
     }
 
     find: {
@@ -42,7 +48,11 @@ export class FindOneUseCase {
         break find;
       }
 
-      return new Left(new ForbiddenError());
+      return new Left(
+        new ForbiddenException(
+          'You do not have permissions to access these sources',
+        ),
+      );
     }
 
     return new Right(user);

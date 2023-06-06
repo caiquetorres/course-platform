@@ -1,24 +1,22 @@
-import { Type } from '@nestjs/common';
+import { ForbiddenException, NotFoundException, Type } from '@nestjs/common';
 
 import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 
-import { ForbiddenError } from '../../common/domain/errors/forbidden.error';
-import { UserNotFoundError } from '../domain/errors/user-not-found.error';
 import { IUser } from '../domain/interfaces/user.interface';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
-import { FindOneUseCase } from './find-one.usecase';
+import { FindOneUserUseCase } from './find-one-user.usecase';
 import { TestBed } from '@automock/jest';
 import { v4 } from 'uuid';
 
-describe('FindOneUseCase (unit)', () => {
-  let createUserUseCase: FindOneUseCase;
+describe('FindOneUserUseCase (unit)', () => {
+  let useCase: FindOneUserUseCase;
   let userRepository: UserRepository;
 
   beforeEach(() => {
-    const { unit, unitRef } = TestBed.create(FindOneUseCase).compile();
+    const { unit, unitRef } = TestBed.create(FindOneUserUseCase).compile();
 
-    createUserUseCase = unit;
+    useCase = unit;
     userRepository = unitRef.get(UserRepository as Type);
   });
 
@@ -32,7 +30,7 @@ describe('FindOneUseCase (unit)', () => {
       .spyOn(userRepository, 'findOneById')
       .mockResolvedValueOnce(requestUser);
 
-    const result = await createUserUseCase.findOne(requestUser, requestUser.id);
+    const result = await useCase.findOne(requestUser, requestUser.id);
 
     expect(result.isRight()).toBeTruthy();
     expect(result.value).toBeDefined();
@@ -46,7 +44,7 @@ describe('FindOneUseCase (unit)', () => {
       roles: new Set([Role.admin]),
     } as IUser);
 
-    const result = await createUserUseCase.findOne(requestUser, v4());
+    const result = await useCase.findOne(requestUser, v4());
 
     expect(result.isRight()).toBeTruthy();
     expect(result.value).toBeDefined();
@@ -59,10 +57,10 @@ describe('FindOneUseCase (unit)', () => {
       roles: new Set([Role.admin]),
     } as IUser);
 
-    const result = await createUserUseCase.findOne(requestUser, v4());
+    const result = await useCase.findOne(requestUser, v4());
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toBeInstanceOf(UserNotFoundError);
+    expect(result.value).toBeInstanceOf(NotFoundException);
   });
 
   it('should throw a forbidden error when the user has no permissions to access those sources', async () => {
@@ -73,9 +71,9 @@ describe('FindOneUseCase (unit)', () => {
       roles: new Set([Role.user]),
     } as IUser);
 
-    const result = await createUserUseCase.findOne(requestUser, v4());
+    const result = await useCase.findOne(requestUser, v4());
 
     expect(result.isLeft()).toBeTruthy();
-    expect(result.value).toBeInstanceOf(ForbiddenError);
+    expect(result.value).toBeInstanceOf(ForbiddenException);
   });
 });

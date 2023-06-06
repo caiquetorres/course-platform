@@ -1,24 +1,22 @@
-import { Type } from '@nestjs/common';
+import { ConflictException, Type } from '@nestjs/common';
 
 import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 import { CreateUserDto } from '../presentation/create-user.dto';
 
-import { DuplicatedEmailError } from '../domain/errors/duplicated-email.error';
-import { DuplicatedUsernameError } from '../domain/errors/duplicated-username.error';
 import { IUser } from '../domain/interfaces/user.interface';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 import { CreateUserUseCase } from './create-user.usecase';
 import { TestBed } from '@automock/jest';
 
 describe('CreateUserUseCase (unit)', () => {
-  let createUserUseCase: CreateUserUseCase;
+  let useCase: CreateUserUseCase;
   let userRepository: UserRepository;
 
   beforeEach(() => {
     const { unit, unitRef } = TestBed.create(CreateUserUseCase).compile();
 
-    createUserUseCase = unit;
+    useCase = unit;
     userRepository = unitRef.get(UserRepository as Type);
   });
 
@@ -39,7 +37,7 @@ describe('CreateUserUseCase (unit)', () => {
     dto.email = 'jane.doe@email.com';
     dto.password = 'JaneDoe123*';
 
-    const result = await createUserUseCase.create(requestUser, dto);
+    const result = await useCase.create(requestUser, dto);
     expect(result.isRight()).toBeTruthy();
   });
 
@@ -60,9 +58,9 @@ describe('CreateUserUseCase (unit)', () => {
     dto.email = 'jane.doe@email.com';
     dto.password = 'JaneDoe123*';
 
-    const result = await createUserUseCase.create(requestUser, dto);
+    const result = await useCase.create(requestUser, dto);
     expect(result.isRight()).toBeFalsy();
-    expect(result.value).toBeInstanceOf(DuplicatedUsernameError);
+    expect(result.value).toBeInstanceOf(ConflictException);
   });
 
   it('should throw a Conflict Exception due to conflicted email', async () => {
@@ -82,8 +80,8 @@ describe('CreateUserUseCase (unit)', () => {
     dto.email = 'jane.doe@email.com';
     dto.password = 'JaneDoe123*';
 
-    const result = await createUserUseCase.create(requestUser, dto);
+    const result = await useCase.create(requestUser, dto);
     expect(result.isRight()).toBeFalsy();
-    expect(result.value).toBeInstanceOf(DuplicatedEmailError);
+    expect(result.value).toBeInstanceOf(ConflictException);
   });
 });

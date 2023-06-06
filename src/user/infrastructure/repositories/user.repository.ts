@@ -1,5 +1,8 @@
 import { User } from '../../domain/models/user';
 
+import { IPage } from '../../../common/domain/interfaces/page.interface';
+import { PageQuery } from '../../../common/presentation/page.query';
+
 export abstract class UserRepository {
   abstract findOneById(id: string): Promise<User | null>;
 
@@ -12,4 +15,6 @@ export abstract class UserRepository {
   ): Promise<User | null>;
 
   abstract createOne(user: User): Promise<User>;
+
+  abstract findMany(query: PageQuery): Promise<IPage<User>>;
 }
