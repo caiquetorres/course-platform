@@ -1,10 +1,11 @@
 import { ConflictException, Type } from '@nestjs/common';
 
-import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 import { CreateUserDto } from '../presentation/create-user.dto';
 
-import { IUser } from '../domain/interfaces/user.interface';
+import { UserBuilder } from '../domain/builders/user.builder';
+import { Email } from '../domain/value-objects/email';
+import { Username } from '../domain/value-objects/username';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 import { CreateUserUseCase } from './create-user.usecase';
 import { TestBed } from '@automock/jest';
@@ -21,15 +22,18 @@ describe('CreateUserUseCase (unit)', () => {
   });
 
   it('should create one user', async () => {
-    jest.spyOn(userRepository, 'createOne').mockResolvedValueOnce({} as any);
+    const requestUser = new UserBuilder().withRandomId().asGuest().build();
+    const targetUser = new UserBuilder()
+      .withRandomId()
+      .withName('Jane Doe')
+      .withUsername(new Username('janedoe'))
+      .withEmail(new Email('jane.doe@email.com'))
+      .asUser()
+      .build();
 
+    jest.spyOn(userRepository, 'save').mockResolvedValueOnce(targetUser);
     jest.spyOn(userRepository, 'findOneByUsername').mockResolvedValueOnce(null);
-
     jest.spyOn(userRepository, 'findOneByEmail').mockResolvedValueOnce(null);
-
-    const requestUser = new User({
-      roles: new Set([Role.guest]),
-    } as IUser);
 
     const dto = new CreateUserDto();
     dto.name = 'Jane Doe';
@@ -39,6 +43,7 @@ describe('CreateUserUseCase (unit)', () => {
 
     const result = await useCase.create(requestUser, dto);
     expect(result.isRight()).toBeTruthy();
+    expect(result.value).toHaveProperty('name', targetUser.name);
   });
 
   it('should throw a Conflict Exception due to conflicted username', async () => {
@@ -48,9 +53,7 @@ describe('CreateUserUseCase (unit)', () => {
 
     jest.spyOn(userRepository, 'findOneByEmail').mockResolvedValueOnce(null);
 
-    const requestUser = new User({
-      roles: new Set([Role.guest]),
-    } as IUser);
+    const requestUser = new UserBuilder().withRandomId().asGuest().build();
 
     const dto = new CreateUserDto();
     dto.name = 'Jane Doe';
@@ -70,9 +73,7 @@ describe('CreateUserUseCase (unit)', () => {
       .spyOn(userRepository, 'findOneByEmail')
       .mockResolvedValueOnce({} as User);
 
-    const requestUser = new User({
-      roles: new Set([Role.guest]),
-    } as IUser);
+    const requestUser = new UserBuilder().withRandomId().asGuest().build();
 
     const dto = new CreateUserDto();
     dto.name = 'Jane Doe';

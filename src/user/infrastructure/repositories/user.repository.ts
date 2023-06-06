@@ -14,7 +14,7 @@ export abstract class UserRepository {
     usernameOrEmail: string,
   ): Promise<User | null>;
 
-  abstract createOne(user: User): Promise<User>;
+  abstract save(user: User): Promise<User>;
 
   abstract findMany(query: PageQuery): Promise<IPage<User>>;
 }

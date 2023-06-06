@@ -68,7 +68,7 @@ export class UserTypeOrmRepository extends UserRepository {
     };
   }
 
-  override async createOne(user: User): Promise<User> {
+  override async save(user: User): Promise<User> {
     let entity = this._toEntity(user);
     entity = await this._repository.save(entity);
     return this._toModel(entity);

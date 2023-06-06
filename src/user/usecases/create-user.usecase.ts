@@ -55,7 +55,7 @@ export class CreateUserUseCase {
       roles: new Set([Role.user]),
     });
 
-    user = await this._userRepository.createOne(user);
+    user = await this._userRepository.save(user);
     return new Right(user);
   }
 

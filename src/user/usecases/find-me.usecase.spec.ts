@@ -1,9 +1,8 @@
 import { ForbiddenException, Type } from '@nestjs/common';
 
-import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 
-import { IUser } from '../domain/interfaces/user.interface';
+import { UserBuilder } from '../domain/builders/user.builder';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 import { FindMeUseCase } from './find-me.usecase';
 import { TestBed } from '@automock/jest';
@@ -22,9 +21,7 @@ describe('FindMeUseCase (unit)', () => {
   it('should get the request user', async () => {
     jest.spyOn(userRepository, 'findOneById').mockResolvedValueOnce({} as User);
 
-    const requestUser = new User({
-      roles: new Set([Role.user]),
-    } as IUser);
+    const requestUser = new UserBuilder().withRandomId().asUser().build();
 
     const result = await useCase.findMe(requestUser);
 
@@ -35,9 +32,7 @@ describe('FindMeUseCase (unit)', () => {
   it('should return Left when the request user is a guest', async () => {
     jest.spyOn(userRepository, 'findOneById').mockResolvedValueOnce({} as User);
 
-    const requestUser = new User({
-      roles: new Set([Role.guest]),
-    } as IUser);
+    const requestUser = new UserBuilder().withRandomId().asGuest().build();
 
     const result = await useCase.findMe(requestUser);
 

@@ -1,9 +1,8 @@
 import { ForbiddenException, NotFoundException, Type } from '@nestjs/common';
 
-import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 
-import { IUser } from '../domain/interfaces/user.interface';
+import { UserBuilder } from '../domain/builders/user.builder';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 import { FindOneUserUseCase } from './find-one-user.usecase';
 import { TestBed } from '@automock/jest';
@@ -21,10 +20,7 @@ describe('FindOneUserUseCase (unit)', () => {
   });
 
   it('should get the request user', async () => {
-    const requestUser = new User({
-      id: v4(),
-      roles: new Set([Role.user]),
-    } as IUser);
+    const requestUser = new UserBuilder().withRandomId().asUser().build();
 
     jest
       .spyOn(userRepository, 'findOneById')
@@ -39,10 +35,7 @@ describe('FindOneUserUseCase (unit)', () => {
   it('should get the request user if the user is an admin', async () => {
     jest.spyOn(userRepository, 'findOneById').mockResolvedValueOnce({} as User);
 
-    const requestUser = new User({
-      id: v4(),
-      roles: new Set([Role.admin]),
-    } as IUser);
+    const requestUser = new UserBuilder().withRandomId().asAdmin().build();
 
     const result = await useCase.findOne(requestUser, v4());
 
@@ -53,9 +46,7 @@ describe('FindOneUserUseCase (unit)', () => {
   it('should throw a not found error when the id represents a user that does not exist', async () => {
     jest.spyOn(userRepository, 'findOneById').mockResolvedValueOnce(null);
 
-    const requestUser = new User({
-      roles: new Set([Role.admin]),
-    } as IUser);
+    const requestUser = new UserBuilder().withRandomId().asAdmin().build();
 
     const result = await useCase.findOne(requestUser, v4());
 
@@ -66,10 +57,7 @@ describe('FindOneUserUseCase (unit)', () => {
   it('should throw a forbidden error when the user has no permissions to access those sources', async () => {
     jest.spyOn(userRepository, 'findOneById').mockResolvedValueOnce({} as User);
 
-    const requestUser = new User({
-      id: v4(),
-      roles: new Set([Role.user]),
-    } as IUser);
+    const requestUser = new UserBuilder().withRandomId().asUser().build();
 
     const result = await useCase.findOne(requestUser, v4());
 

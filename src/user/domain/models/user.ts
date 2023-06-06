@@ -5,7 +5,7 @@ import { Email } from '../value-objects/email';
 import { Password } from '../value-objects/password';
 import { Username } from '../value-objects/username';
 
-export class User implements IUser {
+export class User implements Readonly<IUser> {
   /**
    * @inheritdoc
    */
@@ -51,17 +51,9 @@ export class User implements IUser {
    */
   readonly roles: Set<Role>;
 
-  constructor(data: IUser) {
-    this.id = data.id;
-    this.createdAt = data.createdAt;
-    this.updatedAt = data.updatedAt;
-    this.deletedAt = data.deletedAt;
-
-    this.name = data.name;
-    this.username = data.username;
-    this.email = data.email;
-    this.password = data.password;
-    this.roles = new Set(data.roles);
+  constructor(user: IUser) {
+    Object.assign(this, user);
+    this.roles = new Set(user.roles);
 
     Object.freeze(this);
   }

@@ -1,10 +1,9 @@
 import { ForbiddenException, Type } from '@nestjs/common';
 
-import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 
 import { IPage } from '../../common/domain/interfaces/page.interface';
-import { IUser } from '../domain/interfaces/user.interface';
+import { UserBuilder } from '../domain/builders/user.builder';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 import { FindManyUsersUseCase } from './find-many-users.usecase';
 import { TestBed } from '@automock/jest';
@@ -25,9 +24,7 @@ describe('FindManyUsersUseCase (unit)', () => {
       .spyOn(userRepository, 'findMany')
       .mockResolvedValueOnce({ data: [{}, {}, {}] } as IPage<User>);
 
-    const requestUser = new User({
-      roles: new Set([Role.admin]),
-    } as IUser);
+    const requestUser = new UserBuilder().withRandomId().asAdmin().build();
 
     const result = await useCase.findMany(requestUser, {
       afterCursor: null,
@@ -44,9 +41,7 @@ describe('FindManyUsersUseCase (unit)', () => {
       .spyOn(userRepository, 'findMany')
       .mockResolvedValueOnce({ data: [{}, {}, {}] } as IPage<User>);
 
-    const requestUser = new User({
-      roles: new Set([Role.user]),
-    } as IUser);
+    const requestUser = new UserBuilder().withRandomId().asUser().build();
 
     const result = await useCase.findMany(requestUser, {
       afterCursor: null,
