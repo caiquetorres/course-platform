@@ -28,7 +28,7 @@ export class AuthController {
   /**
    * Authenticates a user and returns a JWT.
    *
-   * @param user The that is consuming the route.
+   * @param requestUser The that is consuming the route.
    * @returns A object containing the JWT and its expiration time.
    * @throws {UnauthorizedException} If the provided credentials are
    * invalid.
@@ -60,7 +60,7 @@ export class AuthController {
   @Post('login')
   @Public()
   @HttpCode(200)
-  login(@RequestUser() user: User) {
-    return this._loginUseCase.login(user);
+  login(@RequestUser() requestUser: User) {
+    return this._loginUseCase.login(requestUser);
   }
 }

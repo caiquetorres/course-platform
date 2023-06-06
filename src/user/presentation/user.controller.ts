@@ -1,14 +1,17 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -21,12 +24,15 @@ import { RequestUser } from '../../common/infrastructure/decorators/request-user
 import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 import { CreateUserDto } from './create-user.dto';
+import { UpdateUserDto } from './update-user.dto';
 
 import { PageQuery } from '../../common/presentation/page.query';
 import { CreateUserUseCase } from '../usecases/create-user.usecase';
+import { DeleteUserUseCase } from '../usecases/delete-user.usecase';
 import { FindManyUsersUseCase } from '../usecases/find-many-users.usecase';
 import { FindMeUseCase } from '../usecases/find-me.usecase';
 import { FindOneUserUseCase } from '../usecases/find-one-user.usecase';
+import { UpdateUserUseCase } from '../usecases/update-user.usecase';
 import { UserPagePresenter } from './user-page.presenter';
 import { UserPresenter } from './user.presenter';
 
@@ -38,6 +44,8 @@ export class UserController {
     private readonly _getMeUseCase: FindMeUseCase,
     private readonly _findOneUseCase: FindOneUserUseCase,
     private readonly _findManyUsersUseCase: FindManyUsersUseCase,
+    private readonly _updateUserUseCase: UpdateUserUseCase,
+    private readonly _deleteUserUseCase: DeleteUserUseCase,
   ) {}
 
   /**
@@ -142,5 +150,55 @@ export class UserController {
     }
 
     throw result.value;
+  }
+
+  /**
+   * Updates a user with the given ID.
+   *
+   * @param requestUser The user making the request.
+   * @param id The ID of the user to update.
+   * @param dto The data to update the user with.
+   * @returns A Promise that resolves to the updated user.
+   * @throws {NotFoundException} If the user with the given ID does not
+   * exist or is disabled.
+   * @throws {ForbiddenException} If the user does not have permission to
+   * update the resource.
+   */
+  @ApiOperation({ summary: 'Updates one user' })
+  @ApiOkResponse({
+    type: UserPresenter,
+    description: 'The user was successfully updated',
+  })
+  @AllowFor(Role.user)
+  @Put(':id')
+  updateOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateUserDto,
+    @RequestUser() requestUser: User,
+  ) {
+    return this._updateUserUseCase.update(requestUser, id, dto);
+  }
+
+  /**
+   * Removes a user with the given ID.
+   *
+   * @param requestUser The user making the request.
+   * @param id The ID of the user to remove.
+   * @returns A Promise that resolves when the user is successfully
+   * removed.
+   * @throws {NotFoundException} If the user with the given ID does not
+   * exist or is disabled.
+   * @throws {ForbiddenException} If the user does not have permission to
+   * remove the resource.
+   */
+  @ApiOperation({ summary: 'Deletes one user' })
+  @ApiNoContentResponse()
+  @AllowFor(Role.user)
+  @Delete(':id')
+  deleteOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() requestUser: User,
+  ) {
+    return this._deleteUserUseCase.delete(requestUser, id);
   }
 }
