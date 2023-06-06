@@ -1,13 +1,29 @@
-import { Column, Entity, Index } from 'typeorm';
-
-import { BaseEntity } from '../../../common/infrastructure/entities/base.entity';
+import {
+  Column,
+  CreateDateColumn,
+  DeleteDateColumn,
+  Entity,
+  Index,
+  PrimaryGeneratedColumn,
+  UpdateDateColumn,
+} from 'typeorm';
 
 import { Role } from '../../domain/models/role.enum';
 
-import { Expose } from 'class-transformer';
-
 @Entity('users')
-export class UserEntity extends BaseEntity {
+export class UserEntity {
+  @PrimaryGeneratedColumn('uuid')
+  id: string;
+
+  @CreateDateColumn()
+  createdAt: Date;
+
+  @UpdateDateColumn()
+  updatedAt: Date;
+
+  @DeleteDateColumn()
+  deletedAt: Date;
+
   @Column({ nullable: false, length: 64 })
   name: string;
 
@@ -22,7 +38,6 @@ export class UserEntity extends BaseEntity {
   @Column({ nullable: false, type: 'text' })
   password: string;
 
-  @Expose({ name: 'permissions' })
   @Column({ nullable: false, type: 'simple-array' })
   roles: Role[];
 }

@@ -51,7 +51,7 @@ export class UserController {
   /**
    * Creates a new user with the given data.
    *
-   * @param _requestUser The user who is creating the user.
+   * @param requestUser The user who is creating the user.
    * @param dto The data for the new user.
    * @returns A Promise that resolves to the created user.
    * @throws {ConflictException} If a user with the given email or username

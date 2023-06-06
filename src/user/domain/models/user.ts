@@ -24,7 +24,7 @@ export class User implements Readonly<IUser> {
   /**
    * @inheritdoc
    */
-  readonly deletedAt?: Date;
+  readonly deletedAt?: Date | null;
 
   /**
    * @inheritdoc
