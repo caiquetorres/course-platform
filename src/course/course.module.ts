@@ -27,5 +27,6 @@ import { UpdateCourseUseCase } from './usecases/update-course.usecase';
       useClass: CourseTypeOrmRepository,
     },
   ],
+  exports: [CourseRepository],
 })
 export class CourseModule {}

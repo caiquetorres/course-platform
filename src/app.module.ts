@@ -1,6 +1,8 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
+import { AppController } from './app.controller';
+
 import { AuthModule } from './auth/auth.module';
 import { TypeOrmConfig } from './common/infrastructure/config/typeorm/typeorm.config';
 import { CourseModule } from './course/course.module';
@@ -15,5 +17,6 @@ import { UserModule } from './user/user.module';
     EnvModule.forRoot({ envFilePath: ['.env'] }),
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfig }),
   ],
+  controllers: [AppController],
 })
 export class AppModule {}

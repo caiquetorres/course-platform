@@ -10,5 +10,10 @@ export abstract class CourseRepository {
 
   abstract findMany(query: PageQuery): Promise<IPage<Course>>;
 
+  abstract findManyByAuthorId(
+    authorId: string,
+    query: PageQuery,
+  ): Promise<IPage<Course>>;
+
   abstract removeOne(course: Course): Promise<void>;
 }
