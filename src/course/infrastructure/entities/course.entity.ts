@@ -56,7 +56,10 @@ export class CourseEntity {
   /**
    * The course owner.
    */
-  @ManyToOne(() => UserEntity, (user) => user.courses, { nullable: false })
+  @ManyToOne(() => UserEntity, (user) => user.courses, {
+    nullable: false,
+    eager: true,
+  })
   owner: Relation<UserEntity>;
 
   toModel() {
@@ -81,6 +84,7 @@ export class CourseEntity {
 
     entity.name = course.name;
     entity.price = +course.price;
+    entity.owner = UserEntity.fromModel(course.owner);
 
     return entity;
   }

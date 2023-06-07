@@ -28,7 +28,7 @@ export class CreateCourseUseCase {
     requestUser: User,
     dto: CreateCourseDto,
   ): Promise<Either<HttpException, Course>> {
-    if (!requestUser.hasRole(Role.admin)) {
+    if (!requestUser.hasRole(Role.author)) {
       return new Left(
         new ForbiddenException(
           'You do not have permissions to access these sources',
@@ -40,6 +40,7 @@ export class CreateCourseUseCase {
       new Course({
         name: dto.name,
         price: new Price(dto.price),
+        owner: requestUser,
       }),
     );
     return new Right(course);

@@ -1,7 +1,22 @@
 import { ApiProperty } from '@nestjs/swagger';
 
+import { User } from '../../user/domain/models/user';
+
 import { ICourse } from '../domain/interfaces/course.interface';
 import { v4 } from 'uuid';
+
+class OwnerPresenter {
+  /**
+   * The course owner name.
+   */
+  @ApiProperty({ example: 'Jane Doe' })
+  readonly name: string;
+
+  constructor(owner: User) {
+    this.name = owner.name;
+    Object.freeze(this);
+  }
+}
 
 export class CoursePresenter {
   /**
@@ -40,6 +55,9 @@ export class CoursePresenter {
   @ApiProperty({ example: 120 })
   readonly price: number;
 
+  @ApiProperty()
+  readonly owner: OwnerPresenter;
+
   constructor(course: ICourse) {
     this.id = course.id;
     this.createdAt = course.createdAt;
@@ -47,6 +65,8 @@ export class CoursePresenter {
     this.deletedAt = course.deletedAt;
     this.name = course.name;
     this.price = course.price.value;
+
+    this.owner = new OwnerPresenter(course.owner);
 
     Object.freeze(this);
   }

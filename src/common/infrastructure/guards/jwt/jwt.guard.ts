@@ -6,8 +6,8 @@ import {
 import { Reflector } from '@nestjs/core';
 import { AuthGuard } from '@nestjs/passport';
 
+import { Role } from '../../../../user/domain/models/role.enum';
 import { User } from '../../../../user/domain/models/user';
-import { Role } from '../../../../user/enums/role.enum';
 
 import { IS_PUBLIC } from '../../../domain/constants/public.constant';
 

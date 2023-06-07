@@ -6,8 +6,8 @@ import {
 } from '@nestjs/common';
 import { Reflector } from '@nestjs/core';
 
+import { Role } from '../../../../user/domain/models/role.enum';
 import { User } from '../../../../user/domain/models/user';
-import { Role } from '../../../../user/enums/role.enum';
 
 import { ROLES_KEY } from '../../../domain/constants/roles.constant';
 import { IRoleOptions } from '../../../domain/interfaces/role-options.interface';

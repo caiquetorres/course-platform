@@ -50,7 +50,7 @@ export class CourseController {
     type: CoursePresenter,
     description: 'The course was successfully created',
   })
-  @AllowFor(Role.admin)
+  @AllowFor(Role.author)
   @Post()
   async createOne(
     @RequestUser() requestUser: User,

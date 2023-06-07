@@ -1,5 +1,6 @@
 import { ForbiddenException, Type } from '@nestjs/common';
 
+import { Course } from '../domain/models/course';
 import { CreateCourseDto } from '../presentation/create-course.dto';
 
 import { UserBuilder } from '../../user/domain/builders/user.builder';
@@ -20,28 +21,40 @@ describe('CreateCourseUseCase (unit)', () => {
   });
 
   it('should create one user', async () => {
-    const targetCourse = new CourseBuilder().withRandomId().build();
-    const requestUser = new UserBuilder().withRandomId().asAdmin().build();
+    const requestUser = new UserBuilder()
+      .withRandomId()
+      .withName('Jane Doe')
+      .asAuthor()
+      .build();
+
+    const targetCourse = new CourseBuilder()
+      .withRandomId()
+      .withOwner(requestUser)
+      .build();
 
     jest.spyOn(repository, 'save').mockResolvedValueOnce(targetCourse);
 
     const dto = new CreateCourseDto();
-    dto.name = 'Jane Doe';
+    dto.name = 'Software Engineering';
     dto.price = 120;
 
     const result = await useCase.create(requestUser, dto);
     expect(result.isRight()).toBeTruthy();
     expect(result.value).toHaveProperty('name', targetCourse.name);
+    expect((result.value as Course).owner).toHaveProperty('name', 'Jane Doe');
   });
 
   it('should throw a Forbidden Exception if the user is not an admin', async () => {
-    const targetCourse = new CourseBuilder().withRandomId().build();
     const requestUser = new UserBuilder().withRandomId().asUser().build();
+    const targetCourse = new CourseBuilder()
+      .withRandomId()
+      .withOwner(requestUser)
+      .build();
 
     jest.spyOn(repository, 'save').mockResolvedValueOnce(targetCourse);
 
     const dto = new CreateCourseDto();
-    dto.name = 'Jane Doe';
+    dto.name = 'Software Engineering';
     dto.price = 120;
 
     const result = await useCase.create(requestUser, dto);
