@@ -1,3 +1,5 @@
+import { User } from '../../../user/domain/models/user';
+
 import { Price } from '../value-objects/price';
 
 export interface ICourse {
@@ -30,4 +32,9 @@ export interface ICourse {
    * The price of the course.
    */
   price: Price;
+
+  /**
+   * The owner of the course.
+   */
+  owner: User;
 }

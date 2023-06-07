@@ -1,5 +1,6 @@
 import {
   ForbiddenException,
+  HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -8,14 +9,18 @@ import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 import { UpdateUserDto } from '../presentation/update-user.dto';
 
-import { Left, Right } from '../../common/domain/classes/either';
+import { Either, Left, Right } from '../../common/domain/classes/either';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 
 @Injectable()
 export class UpdateUserUseCase {
   constructor(private readonly _userRepository: UserRepository) {}
 
-  async update(requestUser: User, userId: string, dto: UpdateUserDto) {
+  async update(
+    requestUser: User,
+    userId: string,
+    dto: UpdateUserDto,
+  ): Promise<Either<HttpException, User>> {
     let user = await this._userRepository.findOneById(userId);
 
     if (!user) {

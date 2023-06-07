@@ -1,12 +1,14 @@
 import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsUtils, Repository } from 'typeorm';
+import { buildPaginator } from 'typeorm-cursor-pagination';
 
 import { CourseEntity } from '../../entities/course.entity';
 
 import { Course } from '../../../domain/models/course';
 
-import { Price } from '../../../domain/value-objects/price';
+import { IPage } from '../../../../common/domain/interfaces/page.interface';
+import { PageQuery } from '../../../../common/presentation/page.query';
 import { CourseRepository } from '../course.repository';
 
 @Injectable()
@@ -19,33 +21,36 @@ export class CourseTypeOrmRepository extends CourseRepository {
   }
 
   override async save(course: Course): Promise<Course> {
-    let entity = this._toEntity(course);
+    let entity = CourseEntity.fromModel(course);
     entity = await this._repository.save(entity);
-    return this._toModel(entity);
+    return entity.toModel();
   }
 
-  private _toEntity(course: Course): CourseEntity {
-    const entity = new CourseEntity();
-
-    entity.id = course.id;
-    entity.createdAt = course.createdAt;
-    entity.updatedAt = course.updatedAt;
-    entity.deletedAt = course.deletedAt;
-
-    entity.name = course.name;
-    entity.price = +course.price;
-
-    return entity;
+  override async findOneById(id: string): Promise<Course> {
+    const entity = await this._repository.findOneBy({ id });
+    return entity ? entity.toModel() : null;
   }
 
-  private _toModel(entity: CourseEntity): Course {
-    return new Course({
-      id: entity.id,
-      createdAt: entity.createdAt,
-      updatedAt: entity.updatedAt,
-      deletedAt: entity.deletedAt,
-      name: entity.name,
-      price: new Price(entity.price),
+  override async findMany(query: PageQuery): Promise<IPage<Course>> {
+    const paginator = buildPaginator({
+      entity: CourseEntity,
+      alias: 'courses',
+      paginationKeys: ['id'],
+      query,
     });
+
+    const queryBuilder = this._repository.createQueryBuilder('courses');
+
+    FindOptionsUtils.joinEagerRelations(
+      queryBuilder,
+      queryBuilder.alias,
+      this._repository.metadata,
+    );
+
+    const page = await paginator.paginate(queryBuilder);
+    return {
+      cursor: page.cursor,
+      data: page.data.map((entity) => entity.toModel()),
+    };
   }
 }

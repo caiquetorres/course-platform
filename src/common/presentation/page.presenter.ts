@@ -23,6 +23,12 @@ export function PagePresenter<T>(type: Type<T>) {
       isArray: true,
     })
     data: T[];
+
+    constructor(page: IPage<T>) {
+      this.cursor = page.cursor;
+      this.data = page.data;
+      Object.freeze(this);
+    }
   }
   return P;
 }

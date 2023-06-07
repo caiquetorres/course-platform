@@ -54,6 +54,11 @@ export class UserBuilder {
     return this;
   }
 
+  asAuthor() {
+    this._roles.add(Role.author);
+    return this;
+  }
+
   asAdmin() {
     this._roles.add(Role.admin);
     return this;

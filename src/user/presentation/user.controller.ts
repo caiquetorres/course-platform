@@ -119,10 +119,6 @@ export class UserController {
       return new UserPresenter(result.value);
     }
 
-    if (result.isRight()) {
-      new UserPresenter(result.value);
-    }
-
     throw result.value;
   }
 
@@ -133,7 +129,8 @@ export class UserController {
    * filters.
    * @param requestUser The user making the request.
    * @returns A Promise that resolves to a paginated list of users.
-   * @throws {ForbiddenException} If the user does not have permission to access the resource.
+   * @throws {ForbiddenException} If the user does not have permission to
+   * access the resource.
    */
   @ApiOperation({ summary: 'Retrieves several users' })
   @ApiOkResponse({ type: UserPagePresenter, description: 'The list of users' })
@@ -146,7 +143,10 @@ export class UserController {
     );
 
     if (result.isRight()) {
-      return result.value;
+      return new UserPagePresenter({
+        cursor: result.value.cursor,
+        data: result.value.data.map((user) => new UserPresenter(user)),
+      });
     }
 
     throw result.value;
@@ -171,12 +171,18 @@ export class UserController {
   })
   @AllowFor(Role.user)
   @Put(':id')
-  updateOne(
+  async updateOne(
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateUserDto,
     @RequestUser() requestUser: User,
   ) {
-    return this._updateUserUseCase.update(requestUser, id, dto);
+    const result = await this._updateUserUseCase.update(requestUser, id, dto);
+
+    if (result.isRight()) {
+      return new UserPresenter(result.value);
+    }
+
+    throw result.value;
   }
 
   /**
@@ -195,10 +201,14 @@ export class UserController {
   @ApiNoContentResponse()
   @AllowFor(Role.user)
   @Delete(':id')
-  deleteOne(
+  async deleteOne(
     @Param('id', ParseUUIDPipe) id: string,
     @RequestUser() requestUser: User,
   ) {
-    return this._deleteUserUseCase.delete(requestUser, id);
+    const result = await this._deleteUserUseCase.delete(requestUser, id);
+
+    if (result.isLeft()) {
+      throw result.value;
+    }
   }
 }

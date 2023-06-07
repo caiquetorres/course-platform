@@ -1,5 +1,6 @@
 import {
   ForbiddenException,
+  HttpException,
   Injectable,
   NotFoundException,
 } from '@nestjs/common';
@@ -28,7 +29,7 @@ export class FindOneUserUseCase {
   async findOne(
     requestUser: User,
     userId: string,
-  ): Promise<Either<Error, User>> {
+  ): Promise<Either<HttpException, User>> {
     const user = await this._userRepository.findOneById(userId);
 
     if (!user) {

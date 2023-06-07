@@ -1,3 +1,5 @@
+import { User } from '../../../user/domain/models/user';
+
 import { ICourse } from '../interfaces/course.interface';
 import { Price } from '../value-objects/price';
 
@@ -31,6 +33,11 @@ interface ICourseConstructor {
    * The price of the course.
    */
   price?: Price;
+
+  /**
+   * The owner of the course.
+   */
+  owner: User;
 }
 
 export class Course implements Readonly<ICourse> {
@@ -63,6 +70,11 @@ export class Course implements Readonly<ICourse> {
    * @inheritdoc
    */
   readonly price: Price = new Price(0);
+
+  /**
+   * @inheritdoc
+   */
+  readonly owner: User;
 
   /**
    * Whether the course is free or not.

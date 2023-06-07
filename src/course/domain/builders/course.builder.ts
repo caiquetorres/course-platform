@@ -1,3 +1,4 @@
+import { User } from '../../../user/domain/models/user';
 import { Course } from '../models/course';
 
 import { ICourse } from '../interfaces/course.interface';
@@ -27,7 +28,12 @@ export class CourseBuilder {
     return this;
   }
 
+  withOwner(owner: User) {
+    this._course.owner = new User(owner);
+    return this;
+  }
+
   build() {
-    return new Course(this._course as ICourse);
+    return new Course(this._course as any);
   }
 }

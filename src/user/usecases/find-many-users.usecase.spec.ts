@@ -10,18 +10,18 @@ import { TestBed } from '@automock/jest';
 
 describe('FindManyUsersUseCase (unit)', () => {
   let useCase: FindManyUsersUseCase;
-  let userRepository: UserRepository;
+  let repository: UserRepository;
 
   beforeEach(() => {
     const { unit, unitRef } = TestBed.create(FindManyUsersUseCase).compile();
 
     useCase = unit;
-    userRepository = unitRef.get(UserRepository as Type);
+    repository = unitRef.get(UserRepository as Type);
   });
 
   it('should get the request user', async () => {
     jest
-      .spyOn(userRepository, 'findMany')
+      .spyOn(repository, 'findMany')
       .mockResolvedValueOnce({ data: [{}, {}, {}] } as IPage<User>);
 
     const requestUser = new UserBuilder().withRandomId().asAdmin().build();
@@ -38,7 +38,7 @@ describe('FindManyUsersUseCase (unit)', () => {
 
   it('should return Left when the request user is not an admin', async () => {
     jest
-      .spyOn(userRepository, 'findMany')
+      .spyOn(repository, 'findMany')
       .mockResolvedValueOnce({ data: [{}, {}, {}] } as IPage<User>);
 
     const requestUser = new UserBuilder().withRandomId().asUser().build();
