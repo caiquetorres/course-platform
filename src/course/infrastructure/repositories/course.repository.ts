@@ -9,4 +9,6 @@ export abstract class CourseRepository {
   abstract findOneById(courseId: string): Promise<Course>;
 
   abstract findMany(query: PageQuery): Promise<IPage<Course>>;
+
+  abstract removeOne(course: Course): Promise<void>;
 }

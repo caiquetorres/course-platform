@@ -20,7 +20,7 @@ describe('CreateCourseUseCase (unit)', () => {
     repository = unitRef.get(CourseRepository as Type);
   });
 
-  it('should create one user', async () => {
+  it('should create one course', async () => {
     const requestUser = new UserBuilder()
       .withRandomId()
       .withName('Jane Doe')
@@ -44,7 +44,7 @@ describe('CreateCourseUseCase (unit)', () => {
     expect((result.value as Course).owner).toHaveProperty('name', 'Jane Doe');
   });
 
-  it('should throw a Forbidden Exception if the user is not an admin', async () => {
+  it('should throw a Forbidden Exception if the user is not an admin or an author', async () => {
     const requestUser = new UserBuilder().withRandomId().asUser().build();
     const targetCourse = new CourseBuilder()
       .withRandomId()

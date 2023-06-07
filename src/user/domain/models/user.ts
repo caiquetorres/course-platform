@@ -1,3 +1,4 @@
+import { Course } from '../../../course/domain/models/course';
 import { Role } from './role.enum';
 
 import { IUser } from '../interfaces/user.interface';
@@ -56,6 +57,12 @@ export class User implements Readonly<IUser> {
     this.roles = new Set(user.roles);
 
     Object.freeze(this);
+  }
+
+  owns(course: Course): boolean;
+
+  owns(entity: Course) {
+    return entity.owner.equals(this);
   }
 
   /**

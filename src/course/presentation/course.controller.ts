@@ -1,14 +1,17 @@
 import {
   Body,
   Controller,
+  Delete,
   Get,
   Param,
   ParseUUIDPipe,
   Post,
+  Put,
   Query,
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -21,11 +24,14 @@ import { RequestUser } from '../../common/infrastructure/decorators/request-user
 import { Role } from '../../user/domain/models/role.enum';
 import { User } from '../../user/domain/models/user';
 import { CreateCourseDto } from './create-course.dto';
+import { UpdateCourseDto } from './update-course.dto';
 
 import { PageQuery } from '../../common/presentation/page.query';
 import { CreateCourseUseCase } from '../usecases/create-course.usecase';
+import { DeleteCourseUseCase } from '../usecases/delete-course.usecase';
 import { FindManyCoursesUseCase } from '../usecases/find-many-courses.usecase';
 import { FindOneCourseUseCase } from '../usecases/find-one-course.usecase';
+import { UpdateCourseUseCase } from '../usecases/update-course.usecase';
 import { CoursePagePresenter } from './course-page.presenter';
 import { CoursePresenter } from './course.presenter';
 
@@ -36,6 +42,8 @@ export class CourseController {
     private readonly _createCourseUseCase: CreateCourseUseCase,
     private readonly _findOneCourseUseCase: FindOneCourseUseCase,
     private readonly _findManyCoursesUseCase: FindManyCoursesUseCase,
+    private readonly _updateCourseUseCase: UpdateCourseUseCase,
+    private readonly _deleteCourseUseCase: DeleteCourseUseCase,
   ) {}
 
   /**
@@ -106,6 +114,46 @@ export class CourseController {
         cursor: result.value.cursor,
         data: result.value.data.map((course) => new CoursePresenter(course)),
       });
+    }
+
+    throw result.value;
+  }
+
+  @ApiOperation({ summary: 'Updates one course' })
+  @ApiOkResponse({
+    type: CoursePresenter,
+    description: 'The course was successfully updated',
+  })
+  @AllowFor(Role.user)
+  @Put(':id')
+  async updateOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @Body() dto: UpdateCourseDto,
+    @RequestUser() requestUser: User,
+  ) {
+    const result = await this._updateCourseUseCase.update(requestUser, id, dto);
+
+    if (result.isRight()) {
+      return new CoursePresenter(result.value);
+    }
+
+    throw result.value;
+  }
+
+  @ApiOperation({ summary: 'Deletes one course' })
+  @ApiNoContentResponse({
+    description: 'The course was successfully deleted',
+  })
+  @AllowFor(Role.user)
+  @Delete(':id')
+  async deleteOne(
+    @Param('id', ParseUUIDPipe) id: string,
+    @RequestUser() requestUser: User,
+  ) {
+    const result = await this._deleteCourseUseCase.delete(requestUser, id);
+
+    if (result.isRight()) {
+      return new CoursePresenter(void 0);
     }
 
     throw result.value;

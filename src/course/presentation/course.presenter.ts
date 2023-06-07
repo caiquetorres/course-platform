@@ -5,7 +5,7 @@ import { User } from '../../user/domain/models/user';
 import { ICourse } from '../domain/interfaces/course.interface';
 import { v4 } from 'uuid';
 
-class OwnerPresenter {
+class CourseOwnerPresenter {
   /**
    * The course owner name.
    */
@@ -56,7 +56,7 @@ export class CoursePresenter {
   readonly price: number;
 
   @ApiProperty()
-  readonly owner: OwnerPresenter;
+  readonly owner: CourseOwnerPresenter;
 
   constructor(course: ICourse) {
     this.id = course.id;
@@ -66,7 +66,7 @@ export class CoursePresenter {
     this.name = course.name;
     this.price = course.price.value;
 
-    this.owner = new OwnerPresenter(course.owner);
+    this.owner = new CourseOwnerPresenter(course.owner);
 
     Object.freeze(this);
   }

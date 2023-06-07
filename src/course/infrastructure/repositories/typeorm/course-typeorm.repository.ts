@@ -53,4 +53,9 @@ export class CourseTypeOrmRepository extends CourseRepository {
       data: page.data.map((entity) => entity.toModel()),
     };
   }
+
+  override async removeOne(course: Course): Promise<void> {
+    const entity = CourseEntity.fromModel(course);
+    await this._repository.remove(entity);
+  }
 }
