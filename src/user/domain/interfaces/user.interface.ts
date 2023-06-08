@@ -48,6 +48,8 @@ export interface IUser {
    */
   password: Password;
 
+  coins: number;
+
   /**
    * The roles assigned to the user.
    */

@@ -48,6 +48,9 @@ export class UserEntity {
   @Column({ nullable: false, type: 'text' })
   password: string;
 
+  @Column({ nullable: false, default: 0 })
+  coins: number;
+
   @Column({ nullable: false, type: 'simple-array' })
   roles: Role[];
 
@@ -71,6 +74,7 @@ export class UserEntity {
       username: new Username(this.username),
       email: new Email(this.email),
       password: new Password(this.password),
+      coins: this.coins,
       roles: new Set(this.roles),
     });
   }
@@ -87,6 +91,7 @@ export class UserEntity {
     entity.username = user.username.value;
     entity.email = user.email.value;
     entity.password = user.password.value;
+    entity.coins = user.coins;
     entity.roles = [...user.roles];
 
     return entity;

@@ -37,6 +37,11 @@ export class UserBuilder {
     return this;
   }
 
+  withCoins(coins: number) {
+    this._user.coins = coins;
+    return this;
+  }
+
   withPassword(password: Password) {
     this._user.password = password;
     return this;

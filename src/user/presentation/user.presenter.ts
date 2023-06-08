@@ -48,6 +48,9 @@ export class UserPresenter {
   @ApiProperty({ example: 'janedoe@email.com' })
   readonly email: string;
 
+  @ApiProperty({ example: 300 })
+  readonly coins: number;
+
   /**
    * The roles assigned to the user.
    */
@@ -62,6 +65,7 @@ export class UserPresenter {
     this.name = user.name;
     this.username = user.username.value;
     this.email = user.email.value;
+    this.coins = user.coins;
     this.permissions = [...user.roles];
 
     Object.freeze(this);

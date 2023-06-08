@@ -6,6 +6,55 @@ import { Email } from '../value-objects/email';
 import { Password } from '../value-objects/password';
 import { Username } from '../value-objects/username';
 
+interface IUserConstructor {
+  /**
+   * The unique identifier for the user.
+   */
+  id?: string;
+
+  /**
+   * The date and time when the user was created.
+   */
+  createdAt?: Date;
+
+  /**
+   * The date and time when the user was last updated.
+   */
+  updatedAt?: Date;
+
+  /**
+   * The date and time when the user was deleted.
+   */
+  deletedAt?: Date;
+
+  /**
+   * The name of the user.
+   */
+  name: string;
+
+  /**
+   * The username of the user.
+   */
+  username: Username;
+
+  /**
+   * The email address of the user.
+   */
+  email: Email;
+
+  /**
+   * The password of the user.
+   */
+  password: Password;
+
+  coins?: number;
+
+  /**
+   * The roles assigned to the user.
+   */
+  roles: Set<Role>;
+}
+
 export class User implements Readonly<IUser> {
   /**
    * @inheritdoc
@@ -47,12 +96,14 @@ export class User implements Readonly<IUser> {
    */
   readonly password: Password;
 
+  readonly coins = 0;
+
   /**
    * @inheritdoc
    */
   readonly roles: Set<Role>;
 
-  constructor(user: IUser) {
+  constructor(user: IUserConstructor) {
     Object.assign(this, user);
     this.roles = new Set(user.roles);
 
