@@ -11,6 +11,7 @@ import {
 } from 'typeorm';
 
 import { CourseEntity } from '../../../course/infrastructure/entities/course.entity';
+import { EnrollmentEntity } from '../../../course/infrastructure/entities/enrollment.entity';
 
 import { Role } from '../../domain/models/role.enum';
 import { User } from '../../domain/models/user';
@@ -49,6 +50,9 @@ export class UserEntity {
 
   @Column({ nullable: false, type: 'simple-array' })
   roles: Role[];
+
+  @OneToMany(() => EnrollmentEntity, (enrollment) => enrollment.owner)
+  enrollments: Relation<EnrollmentEntity>[];
 
   /**
    * The courses that belongs to the user.

@@ -19,7 +19,7 @@ describe('FindManyCoursesUseCase (unit)', () => {
     repository = unitRef.get(CourseRepository as Type);
   });
 
-  it('should find one course', async () => {
+  it('should find several course', async () => {
     jest
       .spyOn(repository, 'findMany')
       .mockResolvedValueOnce({ data: [{}, {}, {}] } as IPage<Course>);

@@ -23,6 +23,7 @@ describe('CreateUserUseCase (unit)', () => {
 
   it('should create one user', async () => {
     const requestUser = new UserBuilder().withRandomId().asGuest().build();
+
     const targetUser = new UserBuilder()
       .withRandomId()
       .withName('Jane Doe')

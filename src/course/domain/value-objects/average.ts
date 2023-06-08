@@ -1,4 +1,4 @@
-export class Price {
+export class Average {
   get value() {
     return this._value;
   }

@@ -19,7 +19,11 @@ describe('FindOneCourseUseCase (unit)', () => {
   });
 
   it('should find one course', async () => {
-    const targetCourse = new CourseBuilder().withRandomId().build();
+    const owner = new UserBuilder().withRandomId().build();
+    const targetCourse = new CourseBuilder()
+      .withRandomId()
+      .withOwner(owner)
+      .build();
     const requestUser = new UserBuilder().withRandomId().asAdmin().build();
 
     jest.spyOn(repository, 'findOneById').mockResolvedValueOnce(targetCourse);
@@ -29,11 +33,10 @@ describe('FindOneCourseUseCase (unit)', () => {
     expect(result.value).toHaveProperty('name', targetCourse.name);
   });
 
-  it('should throw a Not Found Exception if the course that does not exist', async () => {
-    const targetCourse = new CourseBuilder().withRandomId().build();
+  it('should throw a Not Found Exception if the course does not exist', async () => {
     const requestUser = new UserBuilder().withRandomId().asUser().build();
 
-    jest.spyOn(repository, 'save').mockResolvedValueOnce(targetCourse);
+    jest.spyOn(repository, 'findOneById').mockResolvedValueOnce(null);
 
     const result = await useCase.findOne(requestUser, v4());
     expect(result.isLeft()).toBeTruthy();

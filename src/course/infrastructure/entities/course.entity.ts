@@ -4,12 +4,14 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Relation,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { UserEntity } from '../../../user/infrastructure/entities/user.entity';
+import { EnrollmentEntity } from './enrollment.entity';
 
 import { Course } from '../../domain/models/course';
 
@@ -61,6 +63,9 @@ export class CourseEntity {
     eager: true,
   })
   owner: Relation<UserEntity>;
+
+  @OneToMany(() => EnrollmentEntity, (enrollment) => enrollment.course)
+  enrollments: Relation<EnrollmentEntity>[];
 
   toModel() {
     return new Course({
