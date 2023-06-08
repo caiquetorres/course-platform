@@ -47,7 +47,7 @@ interface IUserConstructor {
    */
   password: Password;
 
-  coins?: number;
+  credits?: number;
 
   /**
    * The roles assigned to the user.
@@ -96,7 +96,7 @@ export class User implements Readonly<IUser> {
    */
   readonly password: Password;
 
-  readonly coins = 0;
+  readonly credits = 0;
 
   /**
    * @inheritdoc

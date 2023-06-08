@@ -37,8 +37,8 @@ export class UserBuilder {
     return this;
   }
 
-  withCoins(coins: number) {
-    this._user.coins = coins;
+  withCredits(credits: number) {
+    this._user.credits = credits;
     return this;
   }
 
