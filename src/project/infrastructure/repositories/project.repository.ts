@@ -9,4 +9,6 @@ export abstract class ProjectRepository {
   abstract findOneById(id: string): Promise<Project | null>;
 
   abstract findMany(query: PageQuery): Promise<IPage<Project>>;
+
+  abstract remove(project: Project): Promise<void>;
 }

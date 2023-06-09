@@ -51,4 +51,9 @@ export class ProjectTypeOrmRepository extends ProjectRepository {
       data: page.data.map((entity) => entity.toModel()),
     };
   }
+
+  override async remove(project: Project): Promise<void> {
+    const entity = ProjectEntity.fromModel(project);
+    await this._repository.remove(entity);
+  }
 }

@@ -8,21 +8,19 @@ import {
 import { Role } from '../../user/domain/models/role.enum';
 import { User } from '../../user/domain/models/user';
 import { Project } from '../domain/models/project';
-import { UpdateProjectDto } from '../presentation/update-project.dto';
 
 import { Either, Left, Right } from '../../common/domain/classes/either';
 import { ProjectRepository } from '../infrastructure/repositories/project.repository';
 
 @Injectable()
-export class UpdateProjectUseCase {
+export class DeleteProjectUseCase {
   constructor(private readonly _projectRepository: ProjectRepository) {}
 
-  async update(
+  async delete(
     requestUser: User,
     projectId: string,
-    dto: UpdateProjectDto,
   ): Promise<Either<HttpException, Project>> {
-    let project = await this._projectRepository.findOneById(projectId);
+    const project = await this._projectRepository.findOneById(projectId);
 
     if (!project) {
       return new Left(
@@ -32,24 +30,19 @@ export class UpdateProjectUseCase {
       );
     }
 
-    if (!this._canUpdate(requestUser, project)) {
+    if (!this._canDelete(requestUser, project)) {
       return new Left(
         new ForbiddenException(
-          'You do not have permissions to update this project',
+          'You do not have permissions to delete this project',
         ),
       );
     }
 
-    project = new Project({
-      ...project,
-      name: dto.name,
-      description: dto.description,
-    });
-    project = await this._projectRepository.save(project);
-    return new Right(project);
+    await this._projectRepository.remove(project);
+    return new Right(void 0);
   }
 
-  private _canUpdate(user: User, project: Project) {
+  private _canDelete(user: User, project: Project) {
     if (user.hasRole(Role.admin)) {
       return true;
     }

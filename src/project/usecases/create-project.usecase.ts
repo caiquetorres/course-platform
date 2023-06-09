@@ -1,18 +1,21 @@
-import { ForbiddenException, Injectable } from '@nestjs/common';
+import { ForbiddenException, HttpException, Injectable } from '@nestjs/common';
 
 import { Role } from '../../user/domain/models/role.enum';
 import { User } from '../../user/domain/models/user';
 import { Project } from '../domain/models/project';
 import { CreateProjectDto } from '../presentation/create-project.dto';
 
-import { Left, Right } from '../../common/domain/classes/either';
+import { Either, Left, Right } from '../../common/domain/classes/either';
 import { ProjectRepository } from '../infrastructure/repositories/project.repository';
 
 @Injectable()
 export class CreateProjectUseCase {
   constructor(private readonly _projectRepository: ProjectRepository) {}
 
-  async create(requestUser: User, dto: CreateProjectDto) {
+  async create(
+    requestUser: User,
+    dto: CreateProjectDto,
+  ): Promise<Either<HttpException, Project>> {
     if (!this._canCreate(requestUser)) {
       return new Left(
         new ForbiddenException(
