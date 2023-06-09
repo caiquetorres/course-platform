@@ -1,10 +1,13 @@
 import { InjectRepository } from '@nestjs/typeorm';
-import { Repository } from 'typeorm';
+import { FindOptionsUtils, Repository } from 'typeorm';
+import { buildPaginator } from 'typeorm-cursor-pagination';
 
 import { ProjectEntity } from '../../entities/project.entity';
 
 import { Project } from '../../../domain/models/project';
 
+import { IPage } from '../../../../common/domain/interfaces/page.interface';
+import { PageQuery } from '../../../../common/presentation/page.query';
 import { ProjectRepository } from '../project.repository';
 
 export class ProjectTypeOrmRepository extends ProjectRepository {
@@ -24,5 +27,28 @@ export class ProjectTypeOrmRepository extends ProjectRepository {
   override async findOneById(id: string): Promise<Project> {
     const entity = await this._repository.findOneBy({ id });
     return entity ? entity.toModel() : null;
+  }
+
+  override async findMany(query: PageQuery): Promise<IPage<Project>> {
+    const paginator = buildPaginator({
+      entity: ProjectEntity,
+      alias: 'projects',
+      paginationKeys: ['id'],
+      query,
+    });
+
+    const queryBuilder = this._repository.createQueryBuilder('projects');
+
+    FindOptionsUtils.joinEagerRelations(
+      queryBuilder,
+      queryBuilder.alias,
+      this._repository.metadata,
+    );
+
+    const page = await paginator.paginate(queryBuilder);
+    return {
+      cursor: page.cursor,
+      data: page.data.map((entity) => entity.toModel()),
+    };
   }
 }
