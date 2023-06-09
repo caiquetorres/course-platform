@@ -12,6 +12,7 @@ import {
 
 import { CourseEntity } from '../../../course/infrastructure/entities/course.entity';
 import { EnrollmentEntity } from '../../../course/infrastructure/entities/enrollment.entity';
+import { ProjectEntity } from '../../../project/infrastructure/entities/project.entity';
 
 import { Role } from '../../domain/models/role.enum';
 import { User } from '../../domain/models/user';
@@ -56,6 +57,9 @@ export class UserEntity {
 
   @OneToMany(() => EnrollmentEntity, (enrollment) => enrollment.owner)
   enrollments: Relation<EnrollmentEntity>[];
+
+  @OneToMany(() => ProjectEntity, (project) => project.owner)
+  projects: Relation<ProjectEntity>[];
 
   /**
    * The courses that belongs to the user.
