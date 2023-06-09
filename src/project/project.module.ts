@@ -3,6 +3,8 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 
 import { ProjectEntity } from './infrastructure/entities/project.entity';
 
+import { ProjectController } from './presentation/project.controller';
+
 import { ProjectRepository } from './infrastructure/repositories/project.repository';
 import { ProjectTypeOrmRepository } from './infrastructure/repositories/typeorm/project-typeorm.repository';
 import { CreateProjectUseCase } from './usecases/create-project.usecase';
@@ -13,6 +15,7 @@ import { UpdateProjectUseCase } from './usecases/update-project.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProjectEntity])],
+  controllers: [ProjectController],
   providers: [
     CreateProjectUseCase,
     FindOneProjectUseCase,
