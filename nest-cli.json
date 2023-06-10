@@ -5,16 +5,5 @@
   "compilerOptions": {
     "deleteOutDir": true,
     "webpack": true
-  },
-  "projects": {
-    "influx": {
-      "type": "library",
-      "root": "libs/influx",
-      "entryFile": "index",
-      "sourceRoot": "libs/influx/src",
-      "compilerOptions": {
-        "tsConfigPath": "libs/influx/tsconfig.lib.json"
-      }
-    }
   }
 }

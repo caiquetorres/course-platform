@@ -11,6 +11,7 @@ import { EnvModule } from './env/env.module';
 import { InfluxModule } from './influx/influx.module';
 import { LogModule } from './log/log.module';
 import { ProjectModule } from './project/project.module';
+import { TopicModule } from './topic/topic.module';
 import { UserModule } from './user/user.module';
 
 @Module({
@@ -20,6 +21,7 @@ import { UserModule } from './user/user.module';
     CourseModule,
     ProjectModule,
     LogModule,
+    TopicModule,
     EnvModule.forRoot({ envFilePath: ['.env'] }),
     InfluxModule.forRootAsync({ useClass: InfluxConfig }),
     TypeOrmModule.forRootAsync({ useClass: TypeOrmConfig }),

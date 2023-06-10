@@ -14,6 +14,9 @@ import { CourseEntity } from '../../../course/infrastructure/entities/course.ent
 import { EnrollmentEntity } from '../../../course/infrastructure/entities/enrollment.entity';
 import { ApplicationEntity } from '../../../project/infrastructure/entities/application.entity';
 import { ProjectEntity } from '../../../project/infrastructure/entities/project.entity';
+import { CommentEntity } from '../../../topic/infrastructure/entities/comment.entity';
+import { FeedbackEntity } from '../../../topic/infrastructure/entities/feedback.entity';
+import { TopicEntity } from '../../../topic/infrastructure/entities/topic.entity';
 
 import { Role } from '../../domain/models/role.enum';
 import { User } from '../../domain/models/user';
@@ -64,6 +67,15 @@ export class UserEntity {
 
   @OneToMany(() => ApplicationEntity, (application) => application.owner)
   applications: Relation<ApplicationEntity>[];
+
+  @OneToMany(() => TopicEntity, (topic) => topic.owner)
+  topics: Relation<TopicEntity>[];
+
+  @OneToMany(() => CommentEntity, (comment) => comment.owner)
+  comments: Relation<CommentEntity>[];
+
+  @OneToMany(() => FeedbackEntity, (feedback) => feedback.owner)
+  feedbacks: Relation<FeedbackEntity>[];
 
   /**
    * The courses that belongs to the user.
