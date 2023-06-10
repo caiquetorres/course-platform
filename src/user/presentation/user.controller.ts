@@ -71,7 +71,7 @@ export class UserController {
     const result = await this._createUserUseCase.create(requestUser, dto);
 
     if (result.isRight()) {
-      new UserPresenter(result.value);
+      return new UserPresenter(result.value);
     }
 
     throw result.value;

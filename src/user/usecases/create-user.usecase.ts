@@ -1,10 +1,12 @@
 import { ConflictException, HttpException, Injectable } from '@nestjs/common';
 
+import { Log } from '../../log/domain/models/log';
 import { Role } from '../domain/models/role.enum';
 import { User } from '../domain/models/user';
 import { CreateUserDto } from '../presentation/create-user.dto';
 
 import { Either, Left, Right } from '../../common/domain/classes/either';
+import { LogRepository } from '../../log/infrastructure/repositories/log.repository';
 import { Email } from '../domain/value-objects/email';
 import { Password } from '../domain/value-objects/password';
 import { Username } from '../domain/value-objects/username';
@@ -15,7 +17,10 @@ import { UserRepository } from '../infrastructure/repositories/user.repository';
  */
 @Injectable()
 export class CreateUserUseCase {
-  constructor(private readonly _userRepository: UserRepository) {}
+  constructor(
+    private readonly _userRepository: UserRepository,
+    private readonly _logRepository: LogRepository,
+  ) {}
 
   /**
    * Creates a new user with the provided data.
@@ -53,9 +58,20 @@ export class CreateUserUseCase {
       username: new Username(dto.username),
       password: Password.from(dto.password),
       roles: new Set([Role.user]),
+      credits: 300,
     });
 
     user = await this._userRepository.save(user);
+
+    await this._logRepository.save(
+      new Log({
+        user: user,
+        resource: CreateUserUseCase.name,
+        action: 'added',
+        credits: 300,
+      }),
+    );
+
     return new Right(user);
   }
 

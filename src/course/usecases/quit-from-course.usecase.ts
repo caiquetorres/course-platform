@@ -13,7 +13,7 @@ import { CourseRepository } from '../infrastructure/repositories/course.reposito
 import { EnrollmentRepository } from '../infrastructure/repositories/enrollment.repository';
 
 @Injectable()
-export class QuitTheCourseUseCase {
+export class QuitFromCourseUseCase {
   constructor(
     private readonly _enrollmentRepository: EnrollmentRepository,
     private readonly _courseRepository: CourseRepository,

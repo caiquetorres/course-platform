@@ -1,4 +1,4 @@
-import { Role } from '../../../user/enums/role.enum';
+import { Role } from '../../../user/domain/models/role.enum';
 
 /**
  * Interface for the allowed roles options object.

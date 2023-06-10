@@ -13,7 +13,7 @@ import { Role } from '../../user/domain/models/role.enum';
 import { User } from '../../user/domain/models/user';
 
 import { EnrollInCourseUseCase } from '../usecases/enroll-in-course.usecase';
-import { QuitTheCourseUseCase } from '../usecases/quit-the-course.usecase';
+import { QuitFromCourseUseCase } from '../usecases/quit-from-course.usecase';
 import { EnrollmentPresenter } from './enrollment.presenter';
 
 @ApiTags('courses')
@@ -21,7 +21,7 @@ import { EnrollmentPresenter } from './enrollment.presenter';
 export class EnrollmentController {
   constructor(
     private readonly _enrollInCourseUseCase: EnrollInCourseUseCase,
-    private readonly _quitTheCourseUseCase: QuitTheCourseUseCase,
+    private readonly _quitTheCourseUseCase: QuitFromCourseUseCase,
   ) {}
 
   @ApiOperation({ summary: 'Enrolls a user into a course' })

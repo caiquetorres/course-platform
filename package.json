@@ -8,7 +8,7 @@
   "scripts": {
     "build": "nest build",
     "build:swc": "npx swc --out-dir dist -w src",
-    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\"",
+    "format": "prettier --write \"src/**/*.ts\" \"test/**/*.ts\" \"libs/**/*.ts\"",
     "start": "nest start",
     "start:swc": "nodemon --config nodemon.json dist/main",
     "start:dev": "nest start --watch",
@@ -24,6 +24,8 @@
     "typeorm": "ts-node -r tsconfig-paths/register ./node_modules/typeorm/cli.js"
   },
   "dependencies": {
+    "@influxdata/influxdb-client": "^1.33.2",
+    "@nestjs/axios": "^2.0.0",
     "@nestjs/common": "^9.0.0",
     "@nestjs/config": "^2.3.2",
     "@nestjs/core": "^9.0.0",
@@ -33,6 +35,7 @@
     "@nestjs/swagger": "^6.3.0",
     "@nestjs/throttler": "^4.0.0",
     "@nestjs/typeorm": "^9.0.1",
+    "axios": "^1.4.0",
     "bcryptjs": "^2.4.3",
     "class-transformer": "^0.5.1",
     "class-validator": "^0.14.0",

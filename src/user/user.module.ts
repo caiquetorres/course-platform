@@ -7,6 +7,7 @@ import { UserCourseController } from './presentation/user-course.controller';
 import { UserController } from './presentation/user.controller';
 
 import { CourseModule } from '../course/course.module';
+import { LogModule } from '../log/log.module';
 import { UserTypeOrmRepository } from './infrastructure/repositories/typeorm/user-typeorm.repository';
 import { UserRepository } from './infrastructure/repositories/user.repository';
 import { CreateUserUseCase } from './usecases/create-user.usecase';
@@ -19,7 +20,7 @@ import { FindOwnedCoursesUseCase } from './usecases/find-owned-courses.usecase';
 import { UpdateUserUseCase } from './usecases/update-user.usecase';
 
 @Module({
-  imports: [CourseModule, TypeOrmModule.forFeature([UserEntity])],
+  imports: [CourseModule, LogModule, TypeOrmModule.forFeature([UserEntity])],
   controllers: [UserController, UserCourseController],
   providers: [
     CreateUserUseCase,

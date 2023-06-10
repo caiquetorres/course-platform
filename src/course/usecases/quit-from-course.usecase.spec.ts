@@ -6,17 +6,17 @@ import { UserBuilder } from '../../user/domain/builders/user.builder';
 import { CourseBuilder } from '../domain/builders/course.builder';
 import { CourseRepository } from '../infrastructure/repositories/course.repository';
 import { EnrollmentRepository } from '../infrastructure/repositories/enrollment.repository';
-import { QuitTheCourseUseCase } from './quit-the-course.usecase';
+import { QuitFromCourseUseCase } from './quit-from-course.usecase';
 import { TestBed } from '@automock/jest';
 import { v4 } from 'uuid';
 
-describe('QuitTheCourseUseCase (unit)', () => {
-  let useCase: QuitTheCourseUseCase;
+describe('QuitFromCourseUseCase (unit)', () => {
+  let useCase: QuitFromCourseUseCase;
   let enrollmentRepository: EnrollmentRepository;
   let courseRepository: CourseRepository;
 
   beforeEach(() => {
-    const { unit, unitRef } = TestBed.create(QuitTheCourseUseCase).compile();
+    const { unit, unitRef } = TestBed.create(QuitFromCourseUseCase).compile();
 
     useCase = unit;
 

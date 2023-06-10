@@ -16,7 +16,7 @@ import { DeleteCourseUseCase } from './usecases/delete-course.usecase';
 import { EnrollInCourseUseCase } from './usecases/enroll-in-course.usecase';
 import { FindManyCoursesUseCase } from './usecases/find-many-courses.usecase';
 import { FindOneCourseUseCase } from './usecases/find-one-course.usecase';
-import { QuitTheCourseUseCase } from './usecases/quit-the-course.usecase';
+import { QuitFromCourseUseCase } from './usecases/quit-from-course.usecase';
 import { UpdateCourseUseCase } from './usecases/update-course.usecase';
 
 @Module({
@@ -29,7 +29,7 @@ import { UpdateCourseUseCase } from './usecases/update-course.usecase';
     UpdateCourseUseCase,
     DeleteCourseUseCase,
     EnrollInCourseUseCase,
-    QuitTheCourseUseCase,
+    QuitFromCourseUseCase,
     {
       provide: CourseRepository,
       useClass: CourseTypeOrmRepository,

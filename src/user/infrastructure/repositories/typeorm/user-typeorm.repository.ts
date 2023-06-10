@@ -1,3 +1,4 @@
+import { Injectable } from '@nestjs/common';
 import { InjectRepository } from '@nestjs/typeorm';
 import { FindOptionsUtils, Repository } from 'typeorm';
 import { buildPaginator } from 'typeorm-cursor-pagination';
@@ -10,6 +11,7 @@ import { IPage } from '../../../../common/domain/interfaces/page.interface';
 import { PageQuery } from '../../../../common/presentation/page.query';
 import { UserRepository } from '../user.repository';
 
+@Injectable()
 export class UserTypeOrmRepository extends UserRepository {
   constructor(
     @InjectRepository(UserEntity)

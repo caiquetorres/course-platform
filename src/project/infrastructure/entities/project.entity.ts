@@ -4,12 +4,14 @@ import {
   DeleteDateColumn,
   Entity,
   ManyToOne,
+  OneToMany,
   PrimaryGeneratedColumn,
   Relation,
   UpdateDateColumn,
 } from 'typeorm';
 
 import { UserEntity } from '../../../user/infrastructure/entities/user.entity';
+import { ApplicationEntity } from './application.entity';
 
 import { Project } from '../../domain/models/project';
 
@@ -38,6 +40,9 @@ export class ProjectEntity {
     eager: true,
   })
   owner: Relation<UserEntity>;
+
+  @OneToMany(() => ApplicationEntity, (application) => application.project)
+  applications: Relation<ApplicationEntity>[];
 
   toModel() {
     return new Project({
