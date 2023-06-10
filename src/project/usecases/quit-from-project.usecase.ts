@@ -1,6 +1,5 @@
 import { HttpException, Injectable, NotFoundException } from '@nestjs/common';
 
-import { Role } from '../../user/domain/models/role.enum';
 import { User } from '../../user/domain/models/user';
 
 import { Either, Left, Right } from '../../common/domain/classes/either';
@@ -42,18 +41,5 @@ export class QuitFromProjectUseCase {
 
     await this._applicationRepository.remove(application);
     return new Right(void 0);
-  }
-
-  private _canApply(user: User) {
-    if (user.hasRole(Role.admin)) {
-      return true;
-    }
-
-    if (user.hasRole(Role.pro)) {
-      return true;
-    }
-
-    // authors cannot apply, only if they already have the pro role.
-    return false;
   }
 }
