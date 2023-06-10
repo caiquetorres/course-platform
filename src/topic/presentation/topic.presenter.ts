@@ -1,14 +1,11 @@
 import { ApiProperty } from '@nestjs/swagger';
 
 import { User } from '../../user/domain/models/user';
-import { Project } from '../domain/models/project';
+import { Topic } from '../domain/models/topic';
 
 import { v4 } from 'uuid';
 
-class ProjectOwnerPresenter {
-  /**
-   * The course owner name.
-   */
+class TopicOwnerPresenter {
   @ApiProperty({ example: 'Jane Doe' })
   readonly name: string;
 
@@ -18,7 +15,7 @@ class ProjectOwnerPresenter {
   }
 }
 
-export class ProjectPresenter {
+export class TopicPresenter {
   /**
    * The unique identifier for the user.
    */
@@ -43,24 +40,20 @@ export class ProjectPresenter {
   @ApiProperty({ example: null })
   readonly deletedAt: Date | null;
 
-  @ApiProperty({ example: 'Course Platform' })
-  readonly name: string;
+  @ApiProperty({ example: 'Software Engineering' })
+  readonly title: string;
 
-  @ApiProperty({ example: 'Lorem ipsum dolor si amet.' })
-  readonly description: string;
+  @ApiProperty({ type: () => TopicOwnerPresenter })
+  readonly owner: TopicOwnerPresenter;
 
-  @ApiProperty({ type: () => ProjectOwnerPresenter })
-  readonly owner: ProjectOwnerPresenter;
+  constructor(topic: Topic) {
+    this.id = topic.id;
+    this.createdAt = topic.createdAt;
+    this.updatedAt = topic.updatedAt;
+    this.deletedAt = topic.deletedAt;
 
-  constructor(project: Project) {
-    this.id = project.id;
-    this.createdAt = project.createdAt;
-    this.updatedAt = project.updatedAt;
-    this.deletedAt = project.deletedAt;
-
-    this.name = project.name;
-    this.description = project.description;
-    this.owner = new ProjectOwnerPresenter(project.owner);
+    this.title = topic.title;
+    this.owner = new TopicOwnerPresenter(topic.owner);
 
     Object.freeze(this);
   }

@@ -24,14 +24,15 @@ export class UserCourseController {
 
   @Public()
   @Get('me/courses')
-  findMyCourses(@RequestUser() requestUser: User, @Query() query: PageQuery) {}
+  findMyCourses(@RequestUser() requestUser: User, @Query() query: PageQuery) {
+    // TODO: Implement this route
+  }
 
   @Public()
   @Get(':id/courses')
-  findCoursesById(
-    @RequestUser() requestUser: User,
-    @Query() query: PageQuery,
-  ) {}
+  findCoursesById(@RequestUser() requestUser: User, @Query() query: PageQuery) {
+    // TODO: Implement this route
+  }
 
   @ApiOperation({
     summary: 'Retrieves several courses owned by the request user',
