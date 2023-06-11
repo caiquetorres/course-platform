@@ -7,6 +7,7 @@ import { TopicEntity } from './infrastructure/entities/topic.entity';
 
 import { UpdateTopicDto } from './presentation/update-topic.dto';
 
+import { CommentFeedbackController } from './presentation/comment-feedbacks.controller';
 import { CommentController } from './presentation/comment.controller';
 import { TopicCommentsController } from './presentation/topic-comments.controller';
 import { TopicController } from './presentation/topic.controller';
@@ -33,7 +34,12 @@ import { LikeCommentUseCase } from './usecases/like-comment.usecase';
   imports: [
     TypeOrmModule.forFeature([TopicEntity, FeedbackEntity, CommentEntity]),
   ],
-  controllers: [TopicController, CommentController, TopicCommentsController],
+  controllers: [
+    TopicController,
+    CommentController,
+    TopicCommentsController,
+    CommentFeedbackController,
+  ],
   providers: [
     CreateTopicUseCase,
     FindOneTopicUseCase,
