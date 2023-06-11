@@ -1,32 +1,41 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { User } from '../user/entities/user.entity';
-import { Application } from './entities/application.entity';
-import { Project } from './entities/project.entity';
+import { ApplicationEntity } from './infrastructure/entities/application.entity';
+import { ProjectEntity } from './infrastructure/entities/project.entity';
 
-import { ApplicationService } from './services/application.service';
-import { ProjectService } from './services/project.service';
+import { ProjectController } from './presentation/project.controller';
 
-import { ApplicationController } from './controllers/application.controller';
-import { ProjectController } from './controllers/project.controller';
-
-import {
-  APPLICATION_SERVICE,
-  PROJECT_SERVICE,
-} from './constants/project.constant';
+import { ApplicationRepository } from './infrastructure/repositories/application.repository';
+import { ProjectRepository } from './infrastructure/repositories/project.repository';
+import { ApplicationTypeOrmRepository } from './infrastructure/repositories/typeorm/application-typeorm.repository';
+import { ProjectTypeOrmRepository } from './infrastructure/repositories/typeorm/project-typeorm.repository';
+import { ApplyToProjectUseCase } from './usecases/apply-to-project.usecase';
+import { CreateProjectUseCase } from './usecases/create-project.usecase';
+import { DeleteProjectUseCase } from './usecases/delete-project.usecase';
+import { FindManyProjectsUseCase } from './usecases/find-many-projects.usecase';
+import { FindOneProjectUseCase } from './usecases/find-one-project.usecase';
+import { QuitFromProjectUseCase } from './usecases/quit-from-project.usecase';
+import { UpdateProjectUseCase } from './usecases/update-project.usecase';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Project, User, Application])],
-  controllers: [ProjectController, ApplicationController],
+  imports: [TypeOrmModule.forFeature([ProjectEntity, ApplicationEntity])],
+  controllers: [ProjectController],
   providers: [
+    CreateProjectUseCase,
+    FindOneProjectUseCase,
+    FindManyProjectsUseCase,
+    UpdateProjectUseCase,
+    DeleteProjectUseCase,
+    ApplyToProjectUseCase,
+    QuitFromProjectUseCase,
     {
-      provide: PROJECT_SERVICE,
-      useClass: ProjectService,
+      provide: ProjectRepository,
+      useClass: ProjectTypeOrmRepository,
     },
     {
-      provide: APPLICATION_SERVICE,
-      useClass: ApplicationService,
+      provide: ApplicationRepository,
+      useClass: ApplicationTypeOrmRepository,
     },
   ],
 })

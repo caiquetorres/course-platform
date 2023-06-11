@@ -1,24 +1,44 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Course } from './entities/course.entity';
-import { Enrollment } from './entities/enrollment.entity';
+import { CourseEntity } from './infrastructure/entities/course.entity';
+import { EnrollmentEntity } from './infrastructure/entities/enrollment.entity';
 
-import { CourseService } from './services/course.service';
+import { CourseController } from './presentation/course.controller';
+import { EnrollmentController } from './presentation/enrollment.controller';
 
-import { CourseController } from './controllers/course.controller';
-import { EnrollmentController } from './controllers/enrollment.controller';
-
-import { COURSE_SERVICE } from './constants/course.constant';
+import { CourseRepository } from './infrastructure/repositories/course.repository';
+import { EnrollmentRepository } from './infrastructure/repositories/enrollment.repository';
+import { CourseTypeOrmRepository } from './infrastructure/repositories/typeorm/course-typeorm.repository';
+import { EnrollmentTypeOrmRepository } from './infrastructure/repositories/typeorm/enrollment-typeorm.repository';
+import { CreateCourseUseCase } from './usecases/create-course.usecase';
+import { DeleteCourseUseCase } from './usecases/delete-course.usecase';
+import { EnrollInCourseUseCase } from './usecases/enroll-in-course.usecase';
+import { FindManyCoursesUseCase } from './usecases/find-many-courses.usecase';
+import { FindOneCourseUseCase } from './usecases/find-one-course.usecase';
+import { QuitFromCourseUseCase } from './usecases/quit-from-course.usecase';
+import { UpdateCourseUseCase } from './usecases/update-course.usecase';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([Course, Enrollment])],
+  imports: [TypeOrmModule.forFeature([CourseEntity, EnrollmentEntity])],
   controllers: [CourseController, EnrollmentController],
   providers: [
+    CreateCourseUseCase,
+    FindOneCourseUseCase,
+    FindManyCoursesUseCase,
+    UpdateCourseUseCase,
+    DeleteCourseUseCase,
+    EnrollInCourseUseCase,
+    QuitFromCourseUseCase,
     {
-      provide: COURSE_SERVICE,
-      useClass: CourseService,
+      provide: CourseRepository,
+      useClass: CourseTypeOrmRepository,
+    },
+    {
+      provide: EnrollmentRepository,
+      useClass: EnrollmentTypeOrmRepository,
     },
   ],
+  exports: [CourseRepository],
 })
 export class CourseModule {}

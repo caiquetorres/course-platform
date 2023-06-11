@@ -7,6 +7,7 @@ import { setupApp } from './base';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
+
   await setupApp(app);
 
   const envService = app.get(EnvService);

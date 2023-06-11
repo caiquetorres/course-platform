@@ -6,8 +6,8 @@ import {
 import { Reflector } from '@nestjs/core';
 import { DocumentBuilder, SwaggerModule } from '@nestjs/swagger';
 
-import { JwtGuard } from './common/guards/jwt/jwt.guard';
-import { RolesGuard } from './common/guards/roles/roles.guard';
+import { JwtGuard } from './common/infrastructure/guards/jwt/jwt.guard';
+import { RolesGuard } from './common/infrastructure/guards/roles/roles.guard';
 
 import { EnvService } from './env/env.service';
 
@@ -81,7 +81,7 @@ function setupSwagger(app: INestApplication, env: EnvService) {
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
-  SwaggerModule.setup(`swagger`, app, document, {
+  SwaggerModule.setup('swagger', app, document, {
     swaggerOptions: {
       docExpansion: 'none',
     },

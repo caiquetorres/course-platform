@@ -109,4 +109,17 @@ export class EnvVariables {
   SWAGGER_TAG?: string;
 
   //#endregion
+
+  //#region Influx
+
+  @IsNotEmpty({ message: 'It is required to set the influx db url' })
+  INFLUXDB_URL: string;
+
+  @IsNotEmpty({ message: 'It is required to set the influx db token' })
+  INFLUXDB_TOKEN: string;
+
+  @IsNotEmpty({ message: 'It is required to set the influx db org' })
+  INFLUXDB_ORG: string;
+
+  //#endregion
 }

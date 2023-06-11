@@ -1,30 +1,41 @@
 import { Module } from '@nestjs/common';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Course } from '../course/entities/course.entity';
-import { Enrollment } from '../course/entities/enrollment.entity';
-import { User } from './entities/user.entity';
+import { UserEntity } from './infrastructure/entities/user.entity';
 
-import { UserCoursesService } from './services/user-courses.service';
-import { UserService } from './services/user.service';
+import { UserCourseController } from './presentation/user-course.controller';
+import { UserController } from './presentation/user.controller';
 
-import { UserCoursesController } from './controllers/user-courses.controller';
-import { UserController } from './controllers/user.controller';
-
-import { USER_COURSES_SERVICE, USER_SERVICE } from './constants/user.constant';
+import { CourseModule } from '../course/course.module';
+import { LogModule } from '../log/log.module';
+import { UserTypeOrmRepository } from './infrastructure/repositories/typeorm/user-typeorm.repository';
+import { UserRepository } from './infrastructure/repositories/user.repository';
+import { CreateUserUseCase } from './usecases/create-user.usecase';
+import { DeleteUserUseCase } from './usecases/delete-user.usecase';
+import { FindCoursesByAuthorIdUseCase } from './usecases/find-courses-by-author-id.usecase';
+import { FindManyUsersUseCase as FindAllUsersUseCase } from './usecases/find-many-users.usecase';
+import { FindMeUseCase } from './usecases/find-me.usecase';
+import { FindOneUserUseCase as FindOneUserUseCase } from './usecases/find-one-user.usecase';
+import { FindOwnedCoursesUseCase } from './usecases/find-owned-courses.usecase';
+import { UpdateUserUseCase } from './usecases/update-user.usecase';
 
 @Module({
-  imports: [TypeOrmModule.forFeature([User, Course, Enrollment])],
-  controllers: [UserController, UserCoursesController],
+  imports: [CourseModule, LogModule, TypeOrmModule.forFeature([UserEntity])],
+  controllers: [UserController, UserCourseController],
   providers: [
+    CreateUserUseCase,
+    FindMeUseCase,
+    FindOneUserUseCase,
+    FindAllUsersUseCase,
+    UpdateUserUseCase,
+    DeleteUserUseCase,
+    FindOwnedCoursesUseCase,
+    FindCoursesByAuthorIdUseCase,
     {
-      provide: USER_SERVICE,
-      useClass: UserService,
-    },
-    {
-      provide: USER_COURSES_SERVICE,
-      useClass: UserCoursesService,
+      provide: UserRepository,
+      useClass: UserTypeOrmRepository,
     },
   ],
+  exports: [UserRepository],
 })
 export class UserModule {}

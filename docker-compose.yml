@@ -1,6 +1,11 @@
 version: '3.3'
 
 services:
+  api:
+    build: .
+    ports:
+      - ${PORT}:3000
+
   postgres:
     image: postgres:12.4
     environment:
@@ -9,3 +14,14 @@ services:
       POSTGRES_DB: ${DB_DATABASE}
     ports:
       - ${DB_PORT}:5432
+
+  influx:
+    image: influxdb:2.1.1
+    environment:
+      DOCKER_INFLUXDB_INIT_MODE: setup
+      DOCKER_INFLUXDB_INIT_USERNAME: ${INFLUXDB_USER}
+      DOCKER_INFLUXDB_INIT_PASSWORD: ${INFLUXDB_USER_PASSWORD}
+      DOCKER_INFLUXDB_INIT_ORG: ${INFLUXDB_ORG}
+      DOCKER_INFLUXDB_INIT_BUCKET: ${INFLUXDB_BUCKET}
+    ports:
+      - ${INFLUXDB_PORT}:8086
