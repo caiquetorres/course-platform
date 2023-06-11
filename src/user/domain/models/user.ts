@@ -1,5 +1,6 @@
 import { Course } from '../../../course/domain/models/course';
 import { Project } from '../../../project/domain/models/project';
+import { Comment } from '../../../topic/domain/models/comment';
 import { Topic } from '../../../topic/domain/models/topic';
 import { Role } from './role.enum';
 
@@ -118,11 +119,14 @@ export class User implements Readonly<IUser> {
 
   owns(topic: Topic): boolean;
 
-  owns(entity: Course | Project | Topic) {
+  owns(comment: Comment): boolean;
+
+  owns(entity: Course | Project | Topic | Comment) {
     if (
       entity instanceof Course ||
       entity instanceof Project ||
-      entity instanceof Topic
+      entity instanceof Topic ||
+      entity instanceof Comment
     ) {
       return entity.owner.equals(this);
     }
