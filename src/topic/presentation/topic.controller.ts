@@ -27,8 +27,8 @@ import { CreateTopicUseCase } from '../usecases/create-topic.usecase';
 import { DeleteTopicUseCase } from '../usecases/delete-topic.usecase';
 import { FindManyTopicsUseCase } from '../usecases/find-many-topics.usecase';
 import { FindOneTopicUseCase } from '../usecases/find-one-topic.usecase';
+import { TopicPagePresenter } from './topic-page.presenter';
 import { TopicPresenter } from './topic.presenter';
-import { TopicPagePresenter } from './user-page.presenter';
 
 @ApiTags('topics')
 @Controller('topics')

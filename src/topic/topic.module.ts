@@ -7,9 +7,13 @@ import { TopicEntity } from './infrastructure/entities/topic.entity';
 
 import { UpdateTopicDto } from './presentation/update-topic.dto';
 
+import { CommentController } from './presentation/comment.controller';
+import { TopicCommentsController } from './presentation/topic-comments.controller';
 import { TopicController } from './presentation/topic.controller';
 
+import { CommentRepository } from './infrastructure/repositories/comment.repository';
 import { TopicRepository } from './infrastructure/repositories/topic.repository';
+import { CommentTypeOrmRepository } from './infrastructure/repositories/typeorm/comment-typeorm.repository';
 import { TopicTypeOrmRepository } from './infrastructure/repositories/typeorm/topic-typeorm.repository';
 import { CreateCommentUsecase } from './usecases/create-comment.usecase';
 import { CreateTopicUseCase } from './usecases/create-topic.usecase';
@@ -24,7 +28,7 @@ import { FindOneTopicUseCase } from './usecases/find-one-topic.usecase';
   imports: [
     TypeOrmModule.forFeature([TopicEntity, FeedbackEntity, CommentEntity]),
   ],
-  controllers: [TopicController],
+  controllers: [TopicController, CommentController, TopicCommentsController],
   providers: [
     CreateTopicUseCase,
     FindOneTopicUseCase,
@@ -38,6 +42,10 @@ import { FindOneTopicUseCase } from './usecases/find-one-topic.usecase';
     {
       provide: TopicRepository,
       useClass: TopicTypeOrmRepository,
+    },
+    {
+      provide: CommentRepository,
+      useClass: CommentTypeOrmRepository,
     },
   ],
 })

@@ -11,6 +11,7 @@ import {
 } from '@nestjs/common';
 import {
   ApiCreatedResponse,
+  ApiNoContentResponse,
   ApiOkResponse,
   ApiOperation,
   ApiTags,
@@ -22,7 +23,6 @@ import { RequestUser } from '../../common/infrastructure/decorators/request-user
 
 import { Role } from '../../user/domain/models/role.enum';
 import { User } from '../../user/domain/models/user';
-import { Project } from '../domain/models/project';
 import { CreateProjectDto } from './create-project.dto';
 import { UpdateProjectDto } from './update-project.dto';
 
@@ -135,10 +135,7 @@ export class ProjectController {
   }
 
   @ApiOperation({ summary: 'Deletes one project' })
-  @ApiOkResponse({
-    type: Project,
-    description: 'The project was successfully deleted',
-  })
+  @ApiNoContentResponse({ description: 'The project was successfully deleted' })
   @AllowFor(Role.pro)
   @Delete(':id')
   async deleteOne(
