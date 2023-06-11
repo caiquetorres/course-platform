@@ -1,4 +1,9 @@
-import { ConflictException, HttpException, Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  HttpException,
+  Injectable,
+  Optional,
+} from '@nestjs/common';
 
 import { Log } from '../../log/domain/models/log';
 import { Role } from '../domain/models/role.enum';
@@ -19,7 +24,8 @@ import { UserRepository } from '../infrastructure/repositories/user.repository';
 export class CreateUserUseCase {
   constructor(
     private readonly _userRepository: UserRepository,
-    private readonly _logRepository: LogRepository,
+    @Optional()
+    private readonly _logRepository?: LogRepository,
   ) {}
 
   /**
@@ -63,7 +69,7 @@ export class CreateUserUseCase {
 
     user = await this._userRepository.save(user);
 
-    await this._logRepository.save(
+    await this._logRepository?.save(
       new Log({
         user: user,
         resource: CreateUserUseCase.name,

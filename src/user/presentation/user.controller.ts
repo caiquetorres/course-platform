@@ -172,9 +172,9 @@ export class UserController {
   @AllowFor(Role.user)
   @Put(':id')
   async updateOne(
+    @RequestUser() requestUser: User,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateUserDto,
-    @RequestUser() requestUser: User,
   ) {
     const result = await this._updateUserUseCase.update(requestUser, id, dto);
 
@@ -202,8 +202,8 @@ export class UserController {
   @AllowFor(Role.user)
   @Delete(':id')
   async deleteOne(
-    @Param('id', ParseUUIDPipe) id: string,
     @RequestUser() requestUser: User,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     const result = await this._deleteUserUseCase.delete(requestUser, id);
 
