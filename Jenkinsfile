@@ -44,9 +44,9 @@ pipeline {
         sh 'echo $DOCKERHUB_CREDENTIALS_PSW | docker login -u $DOCKERHUB_CREDENTIALS_USR --password-stdin'
 
         sh 'docker build -t course-platform .'
-        sh 'docker tag course-platform caiquet/course-platform:${env.tag}'
+        sh 'docker tag course-platform caiquet/course-platform:' + params.tag
 
-        sh 'docker push caiquet/course-platform:${env.tag}'
+        sh 'docker push caiquet/course-platform:' + params.tag
       }
     }
   }
