@@ -7,10 +7,10 @@ import {
 
 import { Application } from '../../../src/project/domain/models/application';
 
-import { ProjectBuilder } from '../../builders/project/project.builder';
 import { ApplicationRepository } from '../../../src/project/infrastructure/repositories/application.repository';
 import { ProjectRepository } from '../../../src/project/infrastructure/repositories/project.repository';
 import { ApplyToProjectUseCase } from '../../../src/project/usecases/apply-to-project.usecase';
+import { ProjectBuilder } from '../../builders/project/project.builder';
 import { UserBuilder } from '../../builders/user/user.builder';
 import { TestBed, Type } from '@automock/jest';
 import { v4 } from 'uuid';

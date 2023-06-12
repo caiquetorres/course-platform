@@ -4,6 +4,7 @@ import { TypeOrmModule } from '@nestjs/typeorm';
 import { ApplicationEntity } from './infrastructure/entities/application.entity';
 import { ProjectEntity } from './infrastructure/entities/project.entity';
 
+import { ProjectApplicationController } from './presentation/project-application.controller';
 import { ProjectController } from './presentation/project.controller';
 
 import { ApplicationRepository } from './infrastructure/repositories/application.repository';
@@ -20,7 +21,7 @@ import { UpdateProjectUseCase } from './usecases/update-project.usecase';
 
 @Module({
   imports: [TypeOrmModule.forFeature([ProjectEntity, ApplicationEntity])],
-  controllers: [ProjectController],
+  controllers: [ProjectController, ProjectApplicationController],
   providers: [
     CreateProjectUseCase,
     FindOneProjectUseCase,
