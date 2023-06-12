@@ -47,7 +47,6 @@ export class InfluxService {
     try {
       await lastValueFrom(this._httpService.get<void>(this._options.url));
     } catch (err) {
-      console.log(this._options.url);
       this.logger.error('Unable to connect to the Influx database', err);
       await lastValueFrom(interval(2000));
       this._ping();

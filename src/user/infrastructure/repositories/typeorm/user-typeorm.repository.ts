@@ -73,7 +73,7 @@ export class UserTypeOrmRepository extends UserRepository {
     return entity.toModel();
   }
 
-  override async removeOne(user: User): Promise<void> {
+  override async remove(user: User): Promise<void> {
     const entity = UserEntity.fromModel(user);
     await this._repository.remove(entity);
   }

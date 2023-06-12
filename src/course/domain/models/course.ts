@@ -86,7 +86,7 @@ export class Course implements Readonly<ICourse> {
   constructor(course: ICourseConstructor) {
     Object.assign(this, course);
 
-    this.price = new Price(+course.price);
+    this.price = new Price(course.price ? +course.price : 0);
     this.owner = new User(course.owner);
 
     Object.freeze(this);

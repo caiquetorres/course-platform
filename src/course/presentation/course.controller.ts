@@ -127,9 +127,9 @@ export class CourseController {
   @AllowFor(Role.user)
   @Put(':id')
   async updateOne(
+    @RequestUser() requestUser: User,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateCourseDto,
-    @RequestUser() requestUser: User,
   ) {
     const result = await this._updateCourseUseCase.update(requestUser, id, dto);
 
@@ -147,15 +147,13 @@ export class CourseController {
   @AllowFor(Role.user)
   @Delete(':id')
   async deleteOne(
-    @Param('id', ParseUUIDPipe) id: string,
     @RequestUser() requestUser: User,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     const result = await this._deleteCourseUseCase.delete(requestUser, id);
 
-    if (result.isRight()) {
-      return new CoursePresenter(void 0);
+    if (result.isLeft()) {
+      throw result.value;
     }
-
-    throw result.value;
   }
 }

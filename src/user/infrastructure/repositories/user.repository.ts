@@ -18,5 +18,5 @@ export abstract class UserRepository {
 
   abstract findMany(query: PageQuery): Promise<IPage<User>>;
 
-  abstract removeOne(user: User): Promise<void>;
+  abstract remove(user: User): Promise<void>;
 }

@@ -52,8 +52,8 @@ export class UpdateCourseUseCase {
     course = await this._courseRepository.save(
       new Course({
         ...course,
+        ...(dto.price && { price: new Price(dto.price) }),
         name: dto.name,
-        price: new Price(dto.price),
       }),
     );
     return new Right(course);

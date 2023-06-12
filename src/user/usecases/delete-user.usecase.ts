@@ -45,7 +45,7 @@ export class DeleteUserUseCase {
       );
     }
 
-    await this._userRepository.removeOne(user);
+    await this._userRepository.remove(user);
     return new Right(void 0);
   }
 }

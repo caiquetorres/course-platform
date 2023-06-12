@@ -5,8 +5,13 @@
   "transform": {
     "^.+\\.(t|j)s$": "@swc/jest"
   },
-  "coverageDirectory": "../coverage",
+  "coverageDirectory": "./coverage",
   "coverageReporters": ["text", "html", "cobertura"],
   "testEnvironment": "node",
-  "verbose": true
+  "verbose": true,
+  "globals": {
+    "ts-jest": {
+      "tsConfig": "tsconfig.json"
+    }
+  }
 }
