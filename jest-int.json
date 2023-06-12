@@ -1,0 +1,12 @@
+{
+  "moduleFileExtensions": ["js", "json", "ts"],
+  "rootDir": ".",
+  "testEnvironment": "node",
+  "testRegex": ".int-spec.ts$",
+  "coverageDirectory": "./coverage",
+  "coverageReporters": ["text", "cobertura", "html"],
+  "transform": {
+    "^.+\\.(t|j)s$": "@swc/jest"
+  },
+  "verbose": true
+}
