@@ -8,10 +8,5 @@
   "coverageDirectory": "./coverage",
   "coverageReporters": ["text", "html", "cobertura"],
   "testEnvironment": "node",
-  "verbose": true,
-  "globals": {
-    "ts-jest": {
-      "tsConfig": "tsconfig.json"
-    }
-  }
+  "verbose": true
 }

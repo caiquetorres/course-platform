@@ -10,8 +10,18 @@ export class Password {
   }
 
   static from(value: string) {
+    this._validate(value);
     value = Password._hash(value);
     return new Password(value);
+  }
+
+  private static _validate(password: string) {
+    const regex =
+      /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,}$/;
+
+    if (!regex.test(password)) {
+      throw new Error('Invalid password');
+    }
   }
 
   private static _hash(password: string): string {

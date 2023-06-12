@@ -3,8 +3,8 @@
   "rootDir": ".",
   "testEnvironment": "node",
   "testRegex": ".int-spec.ts$",
-  "coverageDirectory": "../coverage",
-  "coverageReporters": ["text", "cobertura"],
+  "coverageDirectory": "./coverage",
+  "coverageReporters": ["text", "cobertura", "html"],
   "transform": {
     "^.+\\.(t|j)s$": "@swc/jest"
   },

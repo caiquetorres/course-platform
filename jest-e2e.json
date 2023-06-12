@@ -1,12 +1,12 @@
 {
   "moduleFileExtensions": ["js", "json", "ts"],
   "rootDir": ".",
-  "testEnvironment": "node",
   "testRegex": ".e2e-spec.ts$",
-  "coverageDirectory": "../coverage",
-  "coverageReporters": ["text", "cobertura"],
   "transform": {
     "^.+\\.(t|j)s$": "@swc/jest"
   },
+  "coverageDirectory": "./coverage",
+  "coverageReporters": ["text", "html", "cobertura"],
+  "testEnvironment": "node",
   "verbose": true
 }

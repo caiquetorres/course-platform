@@ -4,10 +4,15 @@ export class Username {
   }
 
   constructor(private readonly _value: string) {
+    this._validate(this.value);
     Object.freeze(this);
   }
 
-  toString() {
-    return this.value;
+  private _validate(username: string) {
+    const regex = /^[a-z]+$/;
+
+    if (!regex.test(username)) {
+      throw new Error(`Invalid username '${username}'`);
+    }
   }
 }

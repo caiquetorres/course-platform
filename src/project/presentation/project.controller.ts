@@ -117,9 +117,9 @@ export class ProjectController {
   @AllowFor(Role.pro)
   @Put(':id')
   async updateOne(
+    @RequestUser() requestUser: User,
     @Param('id', ParseUUIDPipe) id: string,
     @Body() dto: UpdateProjectDto,
-    @RequestUser() requestUser: User,
   ) {
     const result = await this._updateProjectUseCase.update(
       requestUser,
@@ -139,8 +139,8 @@ export class ProjectController {
   @AllowFor(Role.pro)
   @Delete(':id')
   async deleteOne(
-    @Param('id', ParseUUIDPipe) id: string,
     @RequestUser() requestUser: User,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     const result = await this._deleteProjectUseCase.delete(requestUser, id);
 

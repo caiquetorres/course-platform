@@ -1,17 +1,17 @@
 import { Test } from '@nestjs/testing';
 import { TypeOrmModule } from '@nestjs/typeorm';
 
-import { Course } from '../../../src/course/domain/models/course';
-import { CreateCourseDto } from '../../../src/course/presentation/create-course.dto';
-import { UpdateCourseDto } from '../../../src/course/presentation/update-course.dto';
+import { Project } from '../../../src/project/domain/models/project';
+import { CreateProjectDto } from '../../../src/project/presentation/create-project.dto';
+import { UpdateProjectDto } from '../../../src/project/presentation/update-project.dto';
 import { Role } from '../../../src/user/domain/models/role.enum';
 import { User } from '../../../src/user/domain/models/user';
 
-import { CourseController } from '../../../src/course/presentation/course.controller';
+import { ProjectController } from '../../../src/project/presentation/project.controller';
 
-import { CourseModule } from '../../../src/course/course.module';
-import { CourseRepository } from '../../../src/course/infrastructure/repositories/course.repository';
 import { LogRepository } from '../../../src/log/infrastructure/repositories/log.repository';
+import { ProjectRepository } from '../../../src/project/infrastructure/repositories/project.repository';
+import { ProjectModule } from '../../../src/project/project.module';
 import { Email } from '../../../src/user/domain/value-objects/email';
 import { Password } from '../../../src/user/domain/value-objects/password';
 import { Username } from '../../../src/user/domain/value-objects/username';
@@ -20,9 +20,9 @@ import { UserModule } from '../../../src/user/user.module';
 import { UserBuilder } from '../../builders/user/user.builder';
 import path from 'path';
 
-describe('CourseController (int)', () => {
-  let controller: CourseController;
-  let repository: CourseRepository;
+describe('ProjectController (int)', () => {
+  let controller: ProjectController;
+  let repository: ProjectRepository;
   let userRepository: UserRepository;
 
   beforeEach(async () => {
@@ -30,8 +30,8 @@ describe('CourseController (int)', () => {
 
     const moduleRef = await Test.createTestingModule({
       imports: [
+        ProjectModule,
         UserModule,
-        CourseModule,
         TypeOrmModule.forRoot({
           type: 'sqlite',
           database: ':memory:',
@@ -45,56 +45,59 @@ describe('CourseController (int)', () => {
       .useValue(null)
       .compile();
 
-    controller = moduleRef.get(CourseController);
-    repository = moduleRef.get(CourseRepository);
+    controller = moduleRef.get(ProjectController);
+    repository = moduleRef.get(ProjectRepository);
     userRepository = moduleRef.get(UserRepository);
   });
 
-  it('should create a new course', async () => {
+  it('should create a new project', async () => {
     const requestUser = await userRepository.save(
       new User({
         name: 'Jane Doe',
         email: new Email('janedoe@email.com'),
         username: new Username('janedoe'),
         password: Password.from('JaneDoe123*'),
-        roles: new Set([Role.author]),
+        roles: new Set([Role.pro]),
       }),
     );
 
-    const dto = new CreateCourseDto();
-    dto.name = 'Software Engineering';
-    dto.price = 120;
+    const dto = new CreateProjectDto();
+    dto.name = 'Course Platform';
+    dto.description = 'Lorem ipsum dolor si amet.';
 
-    const course = await controller.createOne(requestUser, dto);
+    const project = await controller.createOne(requestUser, dto);
 
-    expect(course).toBeDefined();
-    expect(course).toHaveProperty('name', dto.name);
-    expect(course).toHaveProperty('price', dto.price);
+    expect(project).toBeDefined();
+    expect(project).toHaveProperty('name', dto.name);
+    expect(project).toHaveProperty('description', dto.description);
   });
 
-  it('should get the course by id', async () => {
+  it('should get the project by id', async () => {
     const owner = await userRepository.save(
       new User({
         name: 'Jane Doe',
         email: new Email('janedoe@email.com'),
         username: new Username('janedoe'),
         password: Password.from('JaneDoe123*'),
-        roles: new Set([Role.author]),
+        roles: new Set([Role.pro]),
       }),
     );
 
-    const targetCourse = await repository.save(
-      new Course({
-        name: 'Software Engineering',
+    const targetProject = await repository.save(
+      new Project({
+        name: 'Course platform',
+        description: 'Lorem ipsum dolor si amet.',
         owner,
       }),
     );
 
-    const requestUser = new UserBuilder().asGuest().build();
+    const requestUser = new UserBuilder().withRandomId().asGuest().build();
 
-    const result = await controller.findOne(requestUser, targetCourse.id);
-    expect(result).toHaveProperty('name', targetCourse.name);
-    expect(result).toHaveProperty('price', 0);
+    const project = await controller.findOne(requestUser, targetProject.id);
+
+    expect(project).toBeDefined();
+    expect(project).toHaveProperty('name', targetProject.name);
+    expect(project).toHaveProperty('description', targetProject.description);
   });
 
   it('should get courses paginated', async () => {
@@ -104,27 +107,30 @@ describe('CourseController (int)', () => {
         email: new Email('janedoe@email.com'),
         username: new Username('janedoe'),
         password: Password.from('JaneDoe123*'),
-        roles: new Set([Role.author]),
+        roles: new Set([Role.pro]),
       }),
     );
 
-    const courses = [
-      new Course({
-        name: 'Software Engineering I',
+    const projects = [
+      new Project({
+        name: 'Course Platform I',
+        description: 'Lorem ipsum dolor si amet.',
         owner,
       }),
-      new Course({
-        name: 'Software Engineering II',
+      new Project({
+        name: 'Course Platform II',
+        description: 'Lorem ipsum dolor si amet.',
         owner,
       }),
-      new Course({
-        name: 'Software Engineering III',
+      new Project({
+        name: 'Course Platform III',
+        description: 'Lorem ipsum dolor si amet.',
         owner,
       }),
     ];
 
-    for (const course of courses) {
-      await repository.save(course);
+    for (const project of projects) {
+      await repository.save(project);
     }
 
     const requestUser = new UserBuilder().asGuest().build();
@@ -139,7 +145,7 @@ describe('CourseController (int)', () => {
     expect(result.data.length).toBe(3);
   });
 
-  it('should update the course', async () => {
+  it('should update the project', async () => {
     const owner = await userRepository.save(
       new User({
         name: 'Jane Doe',
@@ -150,28 +156,29 @@ describe('CourseController (int)', () => {
       }),
     );
 
-    const targetCourse = await repository.save(
-      new Course({
-        name: 'Software Engineering',
+    const targetProject = await repository.save(
+      new Project({
+        name: 'Course platform',
+        description: 'Lorem ipsum dolor si amet.',
         owner,
       }),
     );
 
     const requestUser = owner;
 
-    const dto = new UpdateCourseDto();
-    dto.name = 'Software Engineering I';
+    const dto = new UpdateProjectDto();
+    dto.name = 'Course Platform I';
 
     const result = await controller.updateOne(
       requestUser,
-      targetCourse.id,
+      targetProject.id,
       dto,
     );
 
     expect(result).toHaveProperty('name', dto.name);
   });
 
-  it('should delete the course', async () => {
+  it('should delete the project', async () => {
     const owner = await userRepository.save(
       new User({
         name: 'Jane Doe',
@@ -182,16 +189,17 @@ describe('CourseController (int)', () => {
       }),
     );
 
-    const targetCourse = await repository.save(
-      new Course({
-        name: 'Software Engineering',
+    const targetProject = await repository.save(
+      new Project({
+        name: 'Course platform',
+        description: 'Lorem ipsum dolor si amet.',
         owner,
       }),
     );
 
     const requestUser = owner;
 
-    const result = await controller.deleteOne(requestUser, targetCourse.id);
+    const result = await controller.deleteOne(requestUser, targetProject.id);
     expect(result).toBeUndefined();
   });
 });
