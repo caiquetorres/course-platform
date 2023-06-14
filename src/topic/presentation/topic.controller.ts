@@ -100,8 +100,8 @@ export class TopicController {
   @AllowFor(/.*/)
   @Delete(':id')
   async deleteOne(
-    @Param('id', ParseUUIDPipe) id: string,
     @RequestUser() requestUser: User,
+    @Param('id', ParseUUIDPipe) id: string,
   ) {
     const result = await this._deleteTopicUseCase.delete(requestUser, id);
 
