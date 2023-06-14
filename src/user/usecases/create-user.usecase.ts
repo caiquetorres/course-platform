@@ -17,9 +17,6 @@ import { Password } from '../domain/value-objects/password';
 import { Username } from '../domain/value-objects/username';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 
-/**
- * Use case for creating a new user.
- */
 @Injectable()
 export class CreateUserUseCase {
   constructor(
@@ -28,14 +25,6 @@ export class CreateUserUseCase {
     private readonly _logRepository?: LogRepository,
   ) {}
 
-  /**
-   * Creates a new user with the provided data.
-   *
-   * @param requestUser The user who is making the request.
-   * @param dto The data for creating the new user.
-   * @returns A promise that resolves to an `Either` type representing
-   * either an error or the created user.
-   */
   async create(
     _requestUser: User,
     dto: CreateUserDto,

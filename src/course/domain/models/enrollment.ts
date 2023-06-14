@@ -34,24 +34,12 @@ interface IEnrollmentConstructor {
 }
 
 export class Enrollment implements Readonly<IEnrollment> {
-  /**
-   * @inheritdoc
-   */
   readonly id?: string;
 
-  /**
-   * @inheritdoc
-   */
   readonly createdAt?: Date;
 
-  /**
-   * @inheritdoc
-   */
   readonly updatedAt?: Date;
 
-  /**
-   * @inheritdoc
-   */
   readonly deletedAt?: Date;
 
   readonly average = 0;

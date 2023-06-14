@@ -11,21 +11,10 @@ import { User } from '../domain/models/user';
 import { Either, Left, Right } from '../../common/domain/classes/either';
 import { UserRepository } from '../infrastructure/repositories/user.repository';
 
-/**
- * Use case for getting a user given his id.
- */
 @Injectable()
 export class FindOneUserUseCase {
   constructor(private readonly _userRepository: UserRepository) {}
 
-  /**
-   * Retrieves a user by ID.
-   *
-   * @param requestUser The user making the request.
-   * @param userId The ID of the user to retrieve.
-   * @returns A promise that resolves to an `Either` containing the
-   * retrieved user or an error.
-   */
   async findOne(
     requestUser: User,
     userId: string,
