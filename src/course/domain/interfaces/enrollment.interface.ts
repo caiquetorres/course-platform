@@ -1,8 +1,6 @@
 import { User } from '../../../user/domain/models/user';
 import { Course } from '../models/course';
 
-import { Average } from '../value-objects/average';
-
 export interface IEnrollment {
   /**
    * The unique identifier for the course.
@@ -24,7 +22,7 @@ export interface IEnrollment {
    */
   deletedAt?: Date | null;
 
-  average: Average;
+  average: number;
 
   isCompleted: boolean;
 

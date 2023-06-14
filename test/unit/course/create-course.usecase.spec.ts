@@ -3,9 +3,9 @@ import { ForbiddenException, Type } from '@nestjs/common';
 import { Course } from '../../../src/course/domain/models/course';
 import { CreateCourseDto } from '../../../src/course/presentation/create-course.dto';
 
-import { CourseBuilder } from '../../builders/course/course.builder';
 import { CourseRepository } from '../../../src/course/infrastructure/repositories/course.repository';
 import { CreateCourseUseCase } from '../../../src/course/usecases/create-course.usecase';
+import { CourseBuilder } from '../../builders/course/course.builder';
 import { UserBuilder } from '../../builders/user/user.builder';
 import { TestBed } from '@automock/jest';
 

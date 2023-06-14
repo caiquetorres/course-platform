@@ -4,9 +4,10 @@ export class Price {
   }
 
   constructor(private readonly _value: number) {
-    if (this.value === undefined) {
-      throw new Error();
+    if (this.value < 0) {
+      throw new Error('Invalid price');
     }
+
     Object.freeze(this);
   }
 

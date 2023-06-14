@@ -1,7 +1,6 @@
 import { User } from '../../../user/domain/models/user';
 
 import { IEnrollment } from '../interfaces/enrollment.interface';
-import { Average } from '../value-objects/average';
 import { Course } from './course';
 
 interface IEnrollmentConstructor {
@@ -25,7 +24,7 @@ interface IEnrollmentConstructor {
    */
   deletedAt?: Date | null;
 
-  average?: Average;
+  average?: number;
 
   isCompleted?: boolean;
 
@@ -55,7 +54,7 @@ export class Enrollment implements Readonly<IEnrollment> {
    */
   readonly deletedAt?: Date;
 
-  readonly average = new Average(0);
+  readonly average = 0;
 
   readonly isCompleted = false;
 

@@ -1,9 +1,9 @@
 import { ForbiddenException, NotFoundException, Type } from '@nestjs/common';
 
-import { CourseBuilder } from '../../builders/course/course.builder';
 import { CourseRepository } from '../../../src/course/infrastructure/repositories/course.repository';
 import { DeleteCourseUseCase } from '../../../src/course/usecases/delete-course.usecase';
 import { UserBuilder } from '../../../test/builders/user/user.builder';
+import { CourseBuilder } from '../../builders/course/course.builder';
 import { TestBed } from '@automock/jest';
 import { v4 } from 'uuid';
 

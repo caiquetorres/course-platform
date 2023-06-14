@@ -8,10 +8,10 @@ import {
 
 import { Enrollment } from '../../../src/course/domain/models/enrollment';
 
-import { CourseBuilder } from '../../builders/course/course.builder';
 import { CourseRepository } from '../../../src/course/infrastructure/repositories/course.repository';
 import { EnrollmentRepository } from '../../../src/course/infrastructure/repositories/enrollment.repository';
 import { EnrollInCourseUseCase } from '../../../src/course/usecases/enroll-in-course.usecase';
+import { CourseBuilder } from '../../builders/course/course.builder';
 import { UserBuilder } from '../../builders/user/user.builder';
 import { TestBed } from '@automock/jest';
 import { v4 } from 'uuid';

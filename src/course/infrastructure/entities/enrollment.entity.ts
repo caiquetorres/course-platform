@@ -14,8 +14,6 @@ import { CourseEntity } from './course.entity';
 
 import { Enrollment } from '../../domain/models/enrollment';
 
-import { Average } from '../../domain/value-objects/average';
-
 @Entity('enrollments')
 export class EnrollmentEntity {
   /**
@@ -67,7 +65,7 @@ export class EnrollmentEntity {
       updatedAt: this.updatedAt,
       deletedAt: this.deletedAt,
       isCompleted: this.isCompleted,
-      average: new Average(this.average),
+      average: this.average,
       owner: this.owner.toModel(),
       course: this.course.toModel(),
     });

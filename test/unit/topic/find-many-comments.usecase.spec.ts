@@ -1,4 +1,4 @@
-import { Type } from '@nestjs/common';
+import { NotFoundException, Type } from '@nestjs/common';
 
 import { Comment } from '../../../src/topic/domain/models/comment';
 import { Topic } from '../../../src/topic/domain/models/topic';
@@ -42,6 +42,26 @@ describe('FindManyCommentsUseCase (unit)', () => {
     });
 
     expect(result.isRight()).toBeTruthy();
+  });
+
+  it('should throw a Not Found Exception if the topic does not exist', async () => {
+    const requestUser = new UserBuilder().withRandomId().asUser().build();
+
+    jest.spyOn(topicRepository, 'findOneById').mockResolvedValueOnce(null);
+
+    jest.spyOn(commentRepository, 'findManyByTopic').mockResolvedValueOnce({
+      cursor: null,
+      data: [{}, {}, {}] as Comment[],
+    });
+
+    const result = await useCase.find(requestUser, v4(), {
+      afterCursor: null,
+      beforeCursor: null,
+      limit: 10,
+    });
+
+    expect(result.isLeft()).toBeTruthy();
+    expect(result.value).toBeInstanceOf(NotFoundException);
   });
 
   it('should throw a Not Found Exception when the comment does not exist', async () => {
