@@ -44,8 +44,8 @@ export class CommentTypeOrmRepository extends CommentRepository {
     });
 
     const queryBuilder = this._repository
-      .createQueryBuilder('comment')
-      .where('comment.topicId = :topicId', { topicId: topic.id });
+      .createQueryBuilder('comments')
+      .where('comments.topicId = :topicId', { topicId: topic.id });
 
     FindOptionsUtils.joinEagerRelations(
       queryBuilder,
