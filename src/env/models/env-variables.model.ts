@@ -112,14 +112,14 @@ export class EnvVariables {
 
   //#region Influx
 
-  @IsNotEmpty({ message: 'It is required to set the influx db url' })
-  INFLUXDB_URL: string;
+  @IsOptional()
+  INFLUXDB_URL?: string;
 
-  @IsNotEmpty({ message: 'It is required to set the influx db token' })
-  INFLUXDB_TOKEN: string;
+  @IsOptional()
+  INFLUXDB_TOKEN?: string;
 
-  @IsNotEmpty({ message: 'It is required to set the influx db org' })
-  INFLUXDB_ORG: string;
+  @IsOptional()
+  INFLUXDB_ORG?: string;
 
   //#endregion
 }

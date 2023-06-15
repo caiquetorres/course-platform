@@ -29,7 +29,6 @@ export class InfluxService {
     private readonly _httpService: HttpService,
   ) {
     this.influx = new InfluxDB(_options);
-    this._ping();
   }
 
   async insertPoint(organization: string, bucket: string, ...points: Point[]) {

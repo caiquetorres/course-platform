@@ -4,8 +4,6 @@ alt="Logo"
 height="80"
 />
 
-<a><img src="https://badgen.net/badge/rust/1.0.0/56D7CC?label=" alt="Rust" /></a>
-
 <a><img src="https://badgen.net/badge/nodejs/18.12.1/blue" alt="Node" /></a>
 
 # 🧐 Installation
@@ -35,6 +33,8 @@ npm install
 ```
 
 # 😎 Running the application
+
+First, make sure you have created a new .env file. A suggestion is duplicating the .env.example file, located on the root.
 
 To get started, you'll need to set up your database. The Course Platform Backend is designed to work with Postgres, and it provides a convenient `docker-compose` file to create a simple local database for testing and debugging purposes.
 
